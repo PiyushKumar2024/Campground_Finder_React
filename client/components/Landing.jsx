@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../public/css/Landing.css';
 
 const Home = () => {
@@ -46,7 +47,7 @@ const Home = () => {
             <div className="hero-section mb-5">
                 <h1 className="display-3 fw-bold">Welcome to YelpCamp</h1>
                 <p className="lead fs-4 mb-4">Discover the best camping grounds from around the world</p>
-                <a href="/campgrounds" className="btn btn-lg btn-success fw-bold px-4">View All Campgrounds</a>
+                <Link to="/campgrounds" className="btn btn-lg btn-success fw-bold px-4">View All Campgrounds</Link>
             </div>
 
             <div className="container">
@@ -234,8 +235,8 @@ const Home = () => {
                         <h3>Ready to start your adventure?</h3>
                         <p className="text-muted mb-4">Join thousands of happy campers today.</p>
                         <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                            <a href="/register" className="btn btn-outline-success btn-lg px-4 gap-3">Create an Account</a>
-                            <a href="/campgrounds/new" className="btn btn-success btn-lg px-4">Add a Campground</a>
+                            <Link to="/register" className="btn btn-outline-success btn-lg px-4 gap-3">Create an Account</Link>
+                            <Link to="/campgrounds/new" className="btn btn-success btn-lg px-4">Add a Campground</Link>
                         </div>
                     </div>
                 </div>

@@ -2,7 +2,7 @@ import express from 'express';
 const router=express.Router();
 import {isLoggedIn,isAuthor,verifyCampgrounds} from '../middleware.js';
 
-import { loadAllCamp, createNewCamp, loadUpdatePage, 
+import {loadUpdatePage, 
     updateCampground, deleteCampground, createNewCampground, 
     loadAllCampground, showOneCampground, 
     newCampPage} from '../controllers/campgrounds.js';
@@ -14,7 +14,7 @@ router.route('/')
 router.get('/new',isLoggedIn,newCampPage)
 
 router.route('/:id')
-    .patch(isLoggedIn,isAuthor,updateCampground)
+    .patch(isLoggedIn,isAuthor,verifyCampgrounds,updateCampground)
     .delete(isLoggedIn,isAuthor,deleteCampground)
     .get(showOneCampground)
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../public/css/Home.css'
 import axios from 'axios'
 import Error from './Error'
@@ -29,7 +30,7 @@ const Home = () => {
         <>
             <div className="hero-section">
                 <div className="py-4 col-lg-8 mx-auto">
-                    <h1 className="display-4" style="font-weight: 500;">Find Your Next Escape</h1>
+                    <h1 className="display-4" style={{ fontWeight: 500 }}>Find Your Next Escape</h1>
                     <p className="lead">
                         Welcome to YelpCamp! We've gathered a collection of the most beautiful and unique campgrounds from around the globe.
                         Whether you're looking for a scenic spot by the lake or a secluded hideaway in the forest, your next adventure starts here.
@@ -51,7 +52,7 @@ const Home = () => {
                                 <div className="card-body d-flex flex-column">
                                     <h5 className="card-title">{camp.name}</h5>
                                     <p className="card-text text-secondary small">{camp.description.substring(0, 100)}...</p>
-                                    <a href={`/campgrounds/${camp._id}`} className="btn btn-success mt-auto">View Details</a>
+                                    <Link to={`/campgrounds/${camp._id}`} className="btn btn-success mt-auto">View Details</Link>
                                 </div>
                             </div>
                         </div>
@@ -61,3 +62,5 @@ const Home = () => {
         </>
     )
 }
+
+export default Home;

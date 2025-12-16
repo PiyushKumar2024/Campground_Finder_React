@@ -32,8 +32,7 @@ export const isLoggedIn=(req,res,next)=>{
         } else {
             req.session.returnTo=req.originalUrl;
         }
-        req.flash('error','You need to be logged in');
-        return res.redirect('/login');
+        return res.status(401).json({message:"You need to be logged in"})
     }
     console.log(req.user);
     next();
@@ -43,12 +42,10 @@ export const isAuthor=async (req,res,next)=>{
     const {id}=req.params;
     const camp=await Campground.findById(id);
     if(!camp){
-        req.flash('error','No Campground is found');
-        return res.redirect('/campgrounds');
+        return res.status(404).json({message:"No campground found"})
     }
     if(!camp.author.equals(req.user._id)){
-        req.flash('error','You are not permitted to do this');
-        return res.redirect(`/campgrounds/${id}`);
+        return res.status(403).json({message:"You are not authorized to do this"})
     }
     next();
 }
@@ -56,9 +53,11 @@ export const isAuthor=async (req,res,next)=>{
 export const isReviewAuthor=async (req,res,next)=>{
     const {id,reviewId}=req.params;
     const review=await Review.findById(reviewId);
+    if(!review){
+        return res.status(404).json({message:"Review not found"})
+    }
     if(!review.author.equals(req.user._id)){
-        req.flash('error','You are not permitted to do this');
-        return res.redirect(`/campgrounds/${id}`);
+        return res.status(403).json({message:"You are not authorized to do this"})
     }
     next();
 }
@@ -66,8 +65,8 @@ export const isReviewAuthor=async (req,res,next)=>{
 export const verifyCampgrounds = catchAsync(async (req, res, next) => {
     const validation = campgroundsChecker.validate(req.body)
     if(validation.error){
-        const message = validation.error.details.map(detail => detail.message)
-        throw new appError(message, 400)
+        const message = validation.error.details.map(detail => detail.message).join(',')
+        return res.status(400).json({ message })
     }
     else{
         next()
@@ -78,8 +77,8 @@ export const verifyReviews=(req,res,next)=>{
     console.log(req.body.review)
     const validation=reviewChecker.validate(req.body.review)
     if(validation.error){
-        const message=validation.error.details.map(detail => detail.message)
-        throw new appError(message,500)
+        const message=validation.error.details.map(detail => detail.message).join(',')
+        return res.status(400).json({ message })
     }
     else{
         //for next call

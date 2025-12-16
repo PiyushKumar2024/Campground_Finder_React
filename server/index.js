@@ -92,7 +92,7 @@ app.listen(3000, () => {
 
 //any other page then throw error
 app.all(/(.*)/,(req,res,next)=>{
-    next(new appError('page not found',404))
+    res.status(404).json({message:"Page not found"})
 })
 
 //error handling middleware (have an extra err signature)
@@ -101,6 +101,6 @@ app.use((err,req,res,next)=>{
     if(!err.message) err.message='Something went wrong'
     if(!err.status) err.status=500
     console.log(err)
-    //render the custom page
-    res.status(err.status).render('error_layout/error',{err})
+    // Return a JSON response for errors
+    res.status(err.status).json({ message: err.message, stack: process.env.NODE_ENV === 'development' ? err.stack : undefined });
 })

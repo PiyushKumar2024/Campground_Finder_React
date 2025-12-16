@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import Campground from '../models/campground.js'
-import cities from './cities.js'
+import { data as cities } from './cities.js'
 import { places, descriptors } from './seedhelper.js'
 
 mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp')
@@ -33,6 +33,7 @@ const seed = async () => {
 seed()
 .then(()=>{
     console.log('Data base successfully seeded')
+    mongoose.connection.close()
 })
 .catch((err)=>{
     console.log(err)

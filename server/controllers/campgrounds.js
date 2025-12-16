@@ -3,41 +3,39 @@ import appError from '../helper/error-class.js';
 import Campground from '../models/campground.js';
 import Review from '../models/review.js';
 import campgroundsChecker from '../models/campgroundValidity.js';
-import flash from 'connect-flash';
 
 export const loadAllCampground=catchAsync(async(req,res)=>{
-    const data=await Campground.find({})
-    res.render('home',{data})
+    const data=await Campground.find({});
+    res.status(200).json(data);
 })
 
 export const createNewCampground=catchAsync(async(req,res)=>{
-    const {name,price,location,description}=req.body
-    const camp=new Campground({name,price,location,description})
-    camp.author=req.user;
-    console.log(req.user);
-    await camp.save()
-    req.flash('success','The campground is successfully created')//set up flash
-    res.redirect('/campgrounds') //to display it just set up a middleware
+    const {name,price,location,description}=req.body;
+    const camp=new Campground({name,price,location,description});
+    camp.author=req.user._id;
+    await camp.save();
+    res.status(201).json({ message: 'The campground is successfully created', id: camp._id });
 })
 
 export const loadUpdatePage=catchAsync(async(req,res)=>{
     const {id}=req.params;
     const data=await Campground.findById(id);
-    res.render('update.ejs',{data})
+    if(!data) return res.status(404).json({ message: 'Campground not found' });
+    res.status(200).json(data);
 })
 
 export const updateCampground=catchAsync(async(req,res)=>{
     const {id}=req.params;
-    const camp=await Campground.findByIdAndUpdate(id,req.body);
-    req.flash('success','The campground is successfully updated');
-    res.redirect(`/campgrounds/${id}`);
+    const camp=await Campground.findByIdAndUpdate(id,req.body, { new: true });
+    if (!camp) return res.status(404).json({ message: 'Campground not found' });
+    res.status(200).json({ message: 'The campground is successfully updated', camp });
 })
 
 export const deleteCampground=catchAsync(async(req,res)=>{
     const {id}=req.params;
-    await Campground.findByIdAndDelete(id)
-    req.flash('success','The campground is successfully deleted')
-    res.redirect('/campgrounds')
+    const deletedCamp = await Campground.findByIdAndDelete(id);
+    if (!deletedCamp) return res.status(404).json({ message: 'Campground not found' });
+    res.status(200).json({ message: 'The campground is successfully deleted' });
 })
 
 export const showOneCampground=catchAsync(async(req,res)=>{
@@ -54,12 +52,11 @@ export const showOneCampground=catchAsync(async(req,res)=>{
         await review.populate('author');
     }
     if(!camp){
-        req.flash('error',"The campground doesnt exist")
-        return res.redirect('/campgrounds')
+        return res.status(404).json({ message: 'The campground does not exist' });
     }
-    res.render('campground',{camp})
+    res.status(200).json(camp);
 })
 
 export const newCampPage=(req,res)=>{
-    res.render('new-camp')
+    res.status(200).json({ message: 'OK' });
 }

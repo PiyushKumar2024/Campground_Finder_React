@@ -19,7 +19,7 @@ export const descriptors = [
     'Diamond'
 ]
 
-module.exports.places = [
+export const places = [
     'Flats',
     'Village',
     'Canyon',

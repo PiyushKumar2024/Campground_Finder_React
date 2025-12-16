@@ -4,7 +4,7 @@ import passport from 'passport';
 import {storeReturnTo} from '../middleware.js';
 
 export const showRegPage=(req,res)=>{
-    res.render('register.ejs');
+    res.status(200).json({message:"OK"});
 }
 
 export const registerUser=catchAsync(async(req,res,next)=>{
@@ -17,23 +17,20 @@ export const registerUser=catchAsync(async(req,res,next)=>{
             if(err){
                 return next(err);
             }
-            req.flash('success','Successfully registered you as the new user');
-            res.redirect('/campgrounds');
+            return res.status(200).json({message:'successfully logged in'});
         })
     } catch (e) {
-        req.flash('error',e.message);
-        res.redirect('/register');
+        res.status(404).json({message:e.message});
     }
 })
 
 export const showLoginPage=(req,res)=>{
-    res.render('login.ejs')
+    res.status(200).json({message:"OK"});
 }
 
 export const loginUser=(req,res)=>{
-    req.flash('success','Welcome back');
     const redirectUrl=res.locals.returnTo || '/campgrounds';
-    res.redirect(redirectUrl);
+    res.status(200).json({ message: 'Welcome back', redirectUrl });
 }
 
 export const logoutUser=(req, res, next) => {
@@ -41,7 +38,6 @@ export const logoutUser=(req, res, next) => {
         if (err) {
             return next(err);
         }
-        req.flash('success', 'Goodbye!');
-        res.redirect('/campgrounds');
+        return res.status(200).json({ message: 'successfully logged out' });
     });
 }
