@@ -1,43 +1,28 @@
 import catchAsync from '../helper/catchAsync.js';
 import User from '../models/user.js';
-import passport from 'passport';
-import {storeReturnTo} from '../middleware.js';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
-export const showRegPage=(req,res)=>{
-    res.status(200).json({message:"OK"});
-}
+dotenv.config();
 
 export const registerUser=catchAsync(async(req,res,next)=>{
-    try {
         const {username,email,password}=req.body;
+        const existingUser=await User.findOne({email});
+        if(existingUser){
+            return res.status(400).json({message:'User already exist'});
+        }
         const user=new User({username,email});
         //use register for registering 
         const registeredUser=await User.register(user,password);
-        req.login(registeredUser,function(err){
-            if(err){
-                return next(err);
-            }
-            return res.status(200).json({message:'successfully logged in'});
-        })
-    } catch (e) {
-        res.status(404).json({message:e.message});
-    }
+        const token=jwt.sign({id:registeredUser._id,username},process.env.JWT_SECRET || 'fallback-secret-for-dev',{expiresIn:'7d'});
+        res.status(200).json({message:'Successfully Registered',token})
 })
 
-export const showLoginPage=(req,res)=>{
-    res.status(200).json({message:"OK"});
-}
-
 export const loginUser=(req,res)=>{
-    const redirectUrl=res.locals.returnTo || '/campgrounds';
-    res.status(200).json({ message: 'Welcome back', redirectUrl });
+    // passport.authenticate('local') has already verified the user and attached it to req.user
+    const { _id, username } = req.user;
+    const token = jwt.sign({ id: _id, username }, process.env.JWT_SECRET || 'fallback-secret-for-dev', { expiresIn: '7d' });
+    res.status(200).json({ message: 'Welcome back', token });
 }
 
-export const logoutUser=(req, res, next) => {
-    req.logout(function (err) {
-        if (err) {
-            return next(err);
-        }
-        return res.status(200).json({ message: 'successfully logged out' });
-    });
-}
+// For JWT, logout is handled on the client side by deleting the token.

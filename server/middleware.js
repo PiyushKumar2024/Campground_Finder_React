@@ -1,44 +1,18 @@
 import catchAsync from './helper/catchAsync.js';
-import appError from './helper/error-class.js';
 import campgroundsChecker from './models/campgroundValidity.js';
 import reviewChecker from './models/reviewValidity.js';
 import Campground from './models/campground.js';
 import Review from './models/review.js';
+import passport from 'passport';
 
-export const storeReturnTo=(req,res,next)=>{
-    //for storing the url from which you are coming
-    if(req.session.returnTo){
-        res.locals.returnTo=req.session.returnTo
-    }
-    next();
-}
+// Use Passport's JWT strategy to protect routes.
+// This automatically checks the 'Authorization' header for the token.
+// and attaches the user to req.user if the token is valid.
+//returns a middleware
+//dont wrap it in catchAsync as it handles it own errors
+export const isLoggedIn = passport.authenticate('jwt', { session: false });
 
-/*The 404 error occurs because when you try to submit a review (a POST request)
-while not logged in, the isLoggedIn middleware saves the URL (/campgrounds/:id/reviews) 
-to req.session.returnTo. After you log in, the application redirects you to that URL. 
-However, browsers perform redirects as GET requests, and there is no GET route defined 
-for /campgrounds/:id/reviews (only POST and DELETE), resulting in a "Page Not Found" error.
-
-To fix this, we need to modify the isLoggedIn middleware to redirect users back to the 
-campground show page (/campgrounds/:id) instead of the review submission endpoint when 
-they are intercepted during a review actio
- */
-export const isLoggedIn=(req,res,next)=>{
-    console.log(req.user);
-    if(!req.isAuthenticated()){
-
-        if(req.originalUrl.includes('/reviews')){
-            req.session.returnTo=req.originalUrl.split('/reviews')[0];
-        } else {
-            req.session.returnTo=req.originalUrl;
-        }
-        return res.status(401).json({message:"You need to be logged in"})
-    }
-    console.log(req.user);
-    next();
-}
-
-export const isAuthor=async (req,res,next)=>{
+export const isAuthor=catchAsync(async (req,res,next)=>{
     const {id}=req.params;
     const camp=await Campground.findById(id);
     if(!camp){
@@ -48,9 +22,9 @@ export const isAuthor=async (req,res,next)=>{
         return res.status(403).json({message:"You are not authorized to do this"})
     }
     next();
-}
+})
 
-export const isReviewAuthor=async (req,res,next)=>{
+export const isReviewAuthor=catchAsync(async (req,res,next)=>{
     const {id,reviewId}=req.params;
     const review=await Review.findById(reviewId);
     if(!review){
@@ -60,9 +34,9 @@ export const isReviewAuthor=async (req,res,next)=>{
         return res.status(403).json({message:"You are not authorized to do this"})
     }
     next();
-}
+})
 
-export const verifyCampgrounds = catchAsync(async (req, res, next) => {
+export const verifyCampgrounds = (req, res, next) => {
     const validation = campgroundsChecker.validate(req.body)
     if(validation.error){
         const message = validation.error.details.map(detail => detail.message).join(',')
@@ -71,9 +45,9 @@ export const verifyCampgrounds = catchAsync(async (req, res, next) => {
     else{
         next()
     }
-})
+}
 
-export const verifyReviews=(req,res,next)=>{
+export const verifyReviews = (req, res, next) => {
     console.log(req.body.review)
     const validation=reviewChecker.validate(req.body.review)
     if(validation.error){

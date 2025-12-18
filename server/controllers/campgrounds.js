@@ -4,6 +4,8 @@ import Campground from '../models/campground.js';
 import Review from '../models/review.js';
 import campgroundsChecker from '../models/campgroundValidity.js';
 
+//get the data for update camp page from show one camp and use it
+
 export const loadAllCampground=catchAsync(async(req,res)=>{
     const data=await Campground.find({});
     res.status(200).json(data);
@@ -15,13 +17,6 @@ export const createNewCampground=catchAsync(async(req,res)=>{
     camp.author=req.user._id;
     await camp.save();
     res.status(201).json({ message: 'The campground is successfully created', id: camp._id });
-})
-
-export const loadUpdatePage=catchAsync(async(req,res)=>{
-    const {id}=req.params;
-    const data=await Campground.findById(id);
-    if(!data) return res.status(404).json({ message: 'Campground not found' });
-    res.status(200).json(data);
 })
 
 export const updateCampground=catchAsync(async(req,res)=>{
@@ -56,7 +51,3 @@ export const showOneCampground=catchAsync(async(req,res)=>{
     }
     res.status(200).json(camp);
 })
-
-export const newCampPage=(req,res)=>{
-    res.status(200).json({ message: 'OK' });
-}
