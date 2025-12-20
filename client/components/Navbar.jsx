@@ -1,6 +1,20 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useSelector,useDispatch } from 'react-redux';
+import { logout } from '../redux/featuresRedux/userSlice';
 
-const Navbar = ({ currentUser }) => {
+const Navbar = () => {
+
+    const { isLoggedIn } = useSelector((state) => state.user);
+    const dispatch=useDispatch();
+    const navigate = useNavigate();
+
+    const handleLogout=()=>{
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        dispatch(logout());
+        navigate('/');
+    }
+
     return (
         <nav className="navbar sticky-top navbar-expand-md navbar-light bg-white shadow-sm mb-2">
             <div className="container-fluid">
@@ -19,7 +33,7 @@ const Navbar = ({ currentUser }) => {
                         <li className="nav-item"><NavLink to="/campgrounds/new" className="nav-link">New Camp</NavLink></li>
                     </ul>
                     <div className="d-flex">
-                        {!currentUser ? (
+                        {!isLoggedIn ? (
                             <>
                                 <Link to="/register" className="btn btn-success me-2">
                                     <i className="bi bi-person-plus-fill"></i> Register
@@ -29,9 +43,9 @@ const Navbar = ({ currentUser }) => {
                                 </Link>
                             </>
                         ) : (
-                            <Link to="/logout" className="btn btn-outline-dark me-2">
-                                <i className="bi bi-person-plus-fill"></i> Logout
-                            </Link>
+                            <button className="btn btn-outline-dark me-2" onClick={handleLogout}>
+                                <i className="bi bi-box-arrow-right"></i> Logout
+                            </button>
                         )}
                     </div>
                 </div>

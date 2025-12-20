@@ -1,4 +1,4 @@
-const Error = (Error) => {
+const Error = ({ err }) => {
     return (
         <>
             <h1>{err.status}</h1>

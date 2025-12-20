@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../public/css/Home.css'
+import '../css/Home.css'
 import axios from 'axios'
 import Error from './Error'
 

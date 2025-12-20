@@ -15,14 +15,14 @@ export const registerUser=catchAsync(async(req,res,next)=>{
         //use register for registering 
         const registeredUser=await User.register(user,password);
         const token=jwt.sign({id:registeredUser._id,username},process.env.JWT_SECRET || 'fallback-secret-for-dev',{expiresIn:'7d'});
-        res.status(200).json({message:'Successfully Registered',token})
+        res.status(200).json({message:'Successfully Registered',token,user:{id:registeredUser._id,username:registeredUser.username,email:registeredUser.email}});
 })
 
 export const loginUser=(req,res)=>{
     // passport.authenticate('local') has already verified the user and attached it to req.user
-    const { _id, username } = req.user;
+    const { _id, username,email } = req.user;
     const token = jwt.sign({ id: _id, username }, process.env.JWT_SECRET || 'fallback-secret-for-dev', { expiresIn: '7d' });
-    res.status(200).json({ message: 'Welcome back', token });
+    res.status(200).json({ message: 'Welcome back', token,user:{id:_id,username:username,email:email} });
 }
 
 // For JWT, logout is handled on the client side by deleting the token.

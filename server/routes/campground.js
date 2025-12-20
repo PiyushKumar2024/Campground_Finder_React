@@ -2,11 +2,8 @@ import express from 'express';
 const router=express.Router();
 import {isLoggedIn,isAuthor,verifyCampgrounds} from '../middleware.js';
 
-import {loadUpdatePage, 
-    updateCampground, deleteCampground, createNewCampground, 
-    loadAllCampground, showOneCampground, 
-    newCampPage} from '../controllers/campgrounds.js';
-
+import { updateCampground, deleteCampground, createNewCampground, 
+        loadAllCampground, showOneCampground, } from '../controllers/campgrounds.js';
 
 //the verification for page and author and page will be done on  the frontend    
 router.route('/')

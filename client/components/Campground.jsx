@@ -1,22 +1,98 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import '../public/css/StarRating.css';
+import { useState, useEffect } from "react";
+import '../css/StarRating.css';
 import axios from "axios";
 import Error from "./Error";
+import { useSelector } from "react-redux";
 
-const Campground = ({ camp, currentUser }) => {
-    const {id}=useParams();
-    const [camp,setCamp]=useEffect();
+const Campground = () => {
+    const { id } = useParams();
+    const [camp, setCamp] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setloading] = useState(true);
+    const { user: currentUser } = useSelector((state) => state.user);
+    const navigate = useNavigate();
 
-    axios.get(`/campgrounds/${id}`)
-        .then(res=>{
-            setCamp(res);
-        })
-        .catch(err=>{
-            return <Error err={err}/>
-        })
+    //cant use async in use effect
+    useEffect(() => {
+        if (!id || id === 'undefined') {
+            setError({ message: 'Invalid Campground ID', status: 400 });
+            setloading(false);
+            return;
+        }
+        try {
+            axios.get(`http://localhost:3000/campgrounds/${id}`)
+                .then((response) => {
+                    setCamp(response.data);
+                    setloading(false);
+                })
+                .catch((e) => {
+                    setError(e);
+                    setloading(false);
+                })
+        } catch (error) {
+            setError(error);
+            setloading(false);
+        }
+    }, [id])
 
-        
+    const handleDeleteCamp = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.delete(`http://localhost:3000/campgrounds/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            navigate('/campgrounds');
+        } catch (error) {
+            setError(error);
+        }
+    }
+
+    const handleDeleteReview=async(rid)=>{
+        try{
+            const token = localStorage.getItem('token');
+            await axios.delete(`http://localhost:3000/campgrounds/${id}/reviews/${rid}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const res = await axios.get(`http://localhost:3000/campgrounds/${id}`);
+            setCamp(res.data);
+        }catch(e){
+            setError(e);
+        }
+    }
+
+    const handleReviewSubmit = async (e) => {
+        e.preventDefault();
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {//if validity fails
+            e.stopPropagation();//prevent bubbling
+            form.classList.add('was-validated');//adding bs class to show the valid/invalid field styles
+            return;
+        }
+        const rating = form['review[rating]'].value;
+        const body = form['review[body]'].value;
+
+        try {
+            const token = localStorage.getItem('token');
+            await axios.post(`http://localhost:3000/campgrounds/${id}/reviews`, 
+                { review: { rating, body } },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            const res = await axios.get(`http://localhost:3000/campgrounds/${id}`);
+            setCamp(res.data);
+            form.reset();
+            form.classList.remove('was-validated');
+        } catch (e) {
+            setError(e);
+        }
+    }
+
+    if (loading) return <h1>Loading...</h1>;
+    if (error) return <Error err={error} />;
+
+
+    console.log(camp);
     return (
         <div className="container mt-4">
             <div className="row">
@@ -35,9 +111,7 @@ const Campground = ({ camp, currentUser }) => {
                         {currentUser && currentUser.username === camp.author.username && (
                             <div className="card-body">
                                 <Link to={`/campgrounds/edit/${camp._id}`} className="btn btn-info">Edit</Link>
-                                <form className="d-inline" action={`/campgrounds/${camp._id}?_method=DELETE`} method="POST">
-                                    <button className="btn btn-danger">Delete</button>
-                                </form>
+                                <button className="btn btn-danger" onClick={handleDeleteCamp}>Delete</button>
                             </div>
                         )}
                     </div>
@@ -48,7 +122,7 @@ const Campground = ({ camp, currentUser }) => {
                         <div className="card shadow-sm mb-4">
                             <div className="card-body">
                                 <h4 className="card-title">Leave a Review</h4>
-                                <form action={`/campgrounds/${camp.id}/reviews`} method="POST" className="needs-validation" noValidate>
+                                <form onSubmit={handleReviewSubmit} className="needs-validation" noValidate>
                                     <fieldset className="starability-growRotate">
                                         <input type="radio" id="no-rate" className="input-no-rate" name="review[rating]" value="1" defaultChecked aria-label="No rating." />
                                         <input type="radio" id="first-rate1" name="review[rating]" value="1" />
@@ -83,9 +157,7 @@ const Campground = ({ camp, currentUser }) => {
                                 <p className="card-text">{review.body}</p>
                                 <p className="card-text">By:{review.author.username}</p>
                                 {currentUser && currentUser.username === review.author.username && (
-                                    <form action={`/campgrounds/${camp._id}/reviews/${review._id}?_method=DELETE`} method="POST">
-                                        <button className="btn btn-sm btn-danger">Delete</button>
-                                    </form>
+                                    <button className="btn btn-sm btn-danger" onClick={()=>handleDeleteReview(review._id)}>Delete</button>
                                 )}
                             </div>
                         </div>

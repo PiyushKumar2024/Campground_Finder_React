@@ -10,6 +10,7 @@ import passport from 'passport';
 import configureJwtStrategy from './passport.js';
 import User from './models/user.js';
 import { Strategy as LocalStrategy} from 'passport-local';
+import cors from 'cors';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,6 +36,7 @@ mongoose.connect(MONGOURL)
         console.log(err)
     })
 
+app.use(cors());
 app.use(express.urlencoded({extended:true})) //for api works
 app.use(express.json()) //also for parsing reqbody and working with json data
 app.use(passport.initialize());//initi passport and also add its method to req body

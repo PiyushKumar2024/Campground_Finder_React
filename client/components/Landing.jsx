@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import '../public/css/Landing.css';
+import '../css/Landing.css';
+
+console.log('hitted the landing page');
 
 const Home = () => {
     useEffect(() => {

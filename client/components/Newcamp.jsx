@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const NewCampForm = () => {
 
@@ -8,15 +10,27 @@ const NewCampForm = () => {
         location:'',
         description:''
     });
+    const [error,setError]=useState(null);
+    const navigate=useNavigate();
 
-    const handleSubmit = (event) => {
+    const handleSubmit =async(event) => {
+        event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
-            event.preventDefault();
             event.stopPropagation();
+            form.classList.add('was-validated');
+            return;
         }
-        form.classList.add('was-validated');
-    };
+        try{
+            const token = localStorage.getItem('token');
+            const response=await axios.post('http://localhost:3000/campgrounds', formData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            navigate(`/campgrounds/${response.data.id}`);
+        }catch(error){
+            setError(error.response?.data?.message || error.message);
+        }
+    }
 
     const handleChange=(e)=>{
         const {name,value}=e.target;
@@ -30,6 +44,7 @@ const NewCampForm = () => {
                     <div className="card shadow-sm">
                         <div className="card-body p-4 p-md-5">
                             <h1 className="card-title text-center mb-4">Add a New Campground</h1>
+                            {error && <div className="alert alert-danger">{error}</div>}
                             <form action="/campgrounds" method="POST" className="needs-validation" noValidate onSubmit={handleSubmit}>
                                 <div className="mb-3">
                                     <label className="form-label" htmlFor="name">Name of campground</label>

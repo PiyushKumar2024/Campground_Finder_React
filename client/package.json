@@ -10,17 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.13.2",
-    "bcrypt": "^6.0.0",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
-    "cors": "^2.8.5",
     "dom": "^0.0.3",
-    "jsonwebtoken": "^9.0.3",
-    "passport-jwt": "^4.0.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.0",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.10.1",
+    "redux": "^5.0.1",
     "router": "^2.2.0"
   },
   "devDependencies": {

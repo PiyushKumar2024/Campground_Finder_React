@@ -24,7 +24,7 @@ const seed = async () => {
             location: `${cities[random].city},${cities[random].state}`,
             price: Math.floor((Math.random()) * 1000 + 200),
             description: 'just a random campgrounds',
-            image: 'https://picsum.photos/256/256',
+            image: `https://picsum.photos/400?random=${Math.random()}`,
             name: `${descriptors[random % (descriptors.length)]} ${places[random % (places.length)]}`
         })
         await camp.save()
