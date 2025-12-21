@@ -8,9 +8,11 @@ const NewCampForm = () => {
         name:'',
         price:0,
         location:'',
-        description:''
+        description:'',
+        image:[]
     });
     const [error,setError]=useState(null);
+    const [loading,setLoading]=useState(false);
     const navigate=useNavigate();
 
     const handleSubmit =async(event) => {
@@ -21,20 +23,54 @@ const NewCampForm = () => {
             form.classList.add('was-validated');
             return;
         }
+
+        //multiple submission
+        if(loading) return;
+
+        setLoading(true);
+        setError(null);
+
+        // We need to use FormData because we are sending a file (binary data).
+        // Standard JSON (application/json) cannot handle file uploads.
+        const data = new FormData();
+        data.append('name', formData.name);
+        data.append('price', formData.price);
+        data.append('location', formData.location);
+        data.append('description', formData.description);
+        // Loop through the FileList and append each file.
+        // We use the same key 'image' for all files, which allows the backend (Multer)
+        // to receive them as an array of files.
+        for (let i = 0; i < formData.image.length; i++) {
+            data.append('image', formData.image[i]);
+        }
+
         try{
             const token = localStorage.getItem('token');
-            const response=await axios.post('http://localhost:3000/campgrounds', formData, {
-                headers: { Authorization: `Bearer ${token}` }
+            const response=await axios.post('http://localhost:3000/campgrounds', data, {
+                headers: { Authorization: `Bearer ${token}` },
+                //timeout for the request
+                timeout:30000,
+                onUploadProgress:(progressEvent)=>{
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    console.log('Upload progress:', percentCompleted + '%');
+                }
             });
-            navigate(`/campgrounds/${response.data.id}`);
+            navigate(`/campgrounds/${response.data._id}`);
         }catch(error){
             setError(error.response?.data?.message || error.message);
+        }finally{
+            setLoading(false);
         }
     }
 
     const handleChange=(e)=>{
+        if(e.target.type==='file'){
+            const imageData=e.target.files;
+            setFormData((prev)=>({...prev,[e.target.name]:imageData}));
+        }else{
         const {name,value}=e.target;
         setFormData((prev)=>({...prev,[name]:value}));
+        }
     }
 
     return (
@@ -45,7 +81,7 @@ const NewCampForm = () => {
                         <div className="card-body p-4 p-md-5">
                             <h1 className="card-title text-center mb-4">Add a New Campground</h1>
                             {error && <div className="alert alert-danger">{error}</div>}
-                            <form action="/campgrounds" method="POST" className="needs-validation" noValidate onSubmit={handleSubmit}>
+                            <form className="needs-validation" noValidate onSubmit={handleSubmit}>
                                 <div className="mb-3">
                                     <label className="form-label" htmlFor="name">Name of campground</label>
                                     <input className="form-control" type="text" id="name" name="name" required onChange={handleChange} value={formData.name}/>
@@ -66,7 +102,12 @@ const NewCampForm = () => {
                                     <input className="form-control" type="text" id="description" name="description" required onChange={handleChange} value={formData.description}/>
                                         <div className="invalid-feedback">Description is required.</div>
                                 </div>
-                                <button className="btn btn-success w-100 py-2 mt-3" type="submit">Add</button>
+                                <div className="mb-3">
+                                    <label className="form-label" htmlFor="image">Upload Image:</label>
+                                    <input className="form-control" type="file" id="image" name="image" multiple required onChange={handleChange}/>
+                                        <div className="invalid-feedback">Atleast one image is required.</div>
+                                </div>
+                                <button className="btn btn-success w-100 py-2 mt-3 Uploading" type="submit" disabled={loading}>{loading?'Uploading':'Add'}</button>
                             </form>
                         </div>
                     </div>

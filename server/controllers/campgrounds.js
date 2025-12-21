@@ -15,6 +15,7 @@ export const createNewCampground=catchAsync(async(req,res)=>{
     const {name,price,location,description}=req.body;
     const camp=new Campground({name,price,location,description});
     camp.author=req.user._id;
+    camp.image=req.file.map(f=>({url:f.url,imageId:f.public_id}));
     await camp.save();
     res.status(201).json({ message: 'The campground is successfully created', id: camp._id });
 })

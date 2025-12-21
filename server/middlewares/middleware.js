@@ -1,8 +1,8 @@
-import catchAsync from './helper/catchAsync.js';
-import campgroundsChecker from './models/campgroundValidity.js';
-import reviewChecker from './models/reviewValidity.js';
-import Campground from './models/campground.js';
-import Review from './models/review.js';
+import catchAsync from '../helper/catchAsync.js';
+import campgroundsChecker from '../models/campgroundValidity.js';
+import reviewChecker from '../models/reviewValidity.js';
+import Campground from '../models/campground.js';
+import Review from '../models/review.js';
 import passport from 'passport';
 
 // Use Passport's JWT strategy to protect routes.

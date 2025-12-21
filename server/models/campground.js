@@ -21,7 +21,19 @@ import User from './user.js';
          required:true
      },
      image:{
-         type:String
+         type:[
+            {
+                url:{
+                    type:String,
+                    required:true
+                },
+                imageId:{
+                    type:String,
+                    required:true
+                }
+            }
+         ],
+         required:true
      },
      //author will be singular but there can be many reviews
      author:{

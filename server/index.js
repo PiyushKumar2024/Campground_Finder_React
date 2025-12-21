@@ -12,6 +12,7 @@ import User from './models/user.js';
 import { Strategy as LocalStrategy} from 'passport-local';
 import cors from 'cors';
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
@@ -19,6 +20,10 @@ dotenv.config();
 
 const PORT=process.env.PORT || 3000;
 const MONGOURL=process.env.MONGO_URL;
+
+if (!MONGOURL) {
+     console.error("CRITICAL ERROR: MONGO_URL is missing. Make sure you have a .env file with this variable.");
+}
 
 // Debugging Middleware: Log every request to see if it reaches the server
 app.use((req, res, next) => {

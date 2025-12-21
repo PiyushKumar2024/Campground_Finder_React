@@ -10,7 +10,7 @@ const Home = () => {
     const [error, setError] = useState(null);
 
     useEffect(()=>{
-        axios.get('/campgrounds')
+        axios.get('http://localhost:3000/campgrounds')
             .then(response=>{
                 setData(response.data);
                 console.log(response.data);
