@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 const Schema=mongoose.Schema;
 import Review from './review.js';
 import User from './user.js';
+import { cloudinary } from '../cloudinary/cloudinary.js';
 
  const campgrounds=new Schema({
      name:{
@@ -55,6 +56,11 @@ import User from './user.js';
                 $in:doc.reviews
             }
         })
+        if (doc.image && doc.image.length) {
+            for (const img of doc.image) {
+                await cloudinary.uploader.destroy(img.imageId);
+            }
+        }
     }
  })
 

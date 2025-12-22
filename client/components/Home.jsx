@@ -44,7 +44,7 @@ const Home = () => {
                         <div className="col-12 col-md-6 col-lg-4" key={camp._id}>
                             <div className="card h-100 shadow border-0">
                                 <div className="card-img-container">
-                                    <img className="card-img-top" style={{ aspectRatio: '16/9', objectFit: 'cover' }} src={camp.image} alt="Camp image" />
+                                    <img className="card-img-top" style={{ aspectRatio: '16/9', objectFit: 'cover' }} src={camp.image.length ? camp.image[0].url : 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg'} alt="Camp image" />
                                     <div className="card-img-overlay-bottom">
                                         <i className="bi-geo-alt"></i> {camp.location}
                                     </div>

@@ -9,7 +9,10 @@ const UpdateCamp = () => {
         name: '',
         price: 0,
         location: '',
-        description: ''
+        description: '',
+        image: [],
+        deleteImages:[],
+        uploadImages: []
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -21,7 +24,10 @@ const UpdateCamp = () => {
                     name: res.data.name,
                     price: res.data.price,
                     location: res.data.location,
-                    description: res.data.description
+                    description: res.data.description,
+                    image: res.data.image || [],
+                    deleteImages:[],
+                    uploadImages: []
                 });
                 setLoading(false);
             })
@@ -32,15 +38,44 @@ const UpdateCamp = () => {
     }, [id]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const {name,value,type,checked,files}=e.target;
+        if(type=='checkbox'){
+            if(checked){
+                setFormData((prev)=>({...prev,['deleteImages']:[...prev.deleteImages,e.target.value]}));
+            }else{
+                setFormData((prev)=>{
+                    return {...prev,['deleteImages']:prev.deleteImages.filter((img)=>img!=value)};
+                })
+            }
+        }else if(type === 'file'){
+            setFormData((prev)=>({...prev, uploadImages: files}));
+        }else{
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
+        console.log(formData);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            await axios.patch(`http://localhost:3000/campgrounds/${id}`, formData, {
+            const data = new FormData();
+            data.append('name', formData.name);
+            data.append('price', formData.price);
+            data.append('location', formData.location);
+            data.append('description', formData.description);
+            
+            if(formData.deleteImages){
+                formData.deleteImages.forEach(img => data.append('deleteImages', img));
+            }
+            
+            if(formData.uploadImages){
+                for(let i=0; i<formData.uploadImages.length; i++){
+                    data.append('image', formData.uploadImages[i]);
+                }
+            }
+
+            await axios.patch(`http://localhost:3000/campgrounds/${id}`, data, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             navigate(`/campgrounds/${id}`);
@@ -75,6 +110,30 @@ const UpdateCamp = () => {
                                 <div className="mb-3">
                                     <label className="form-label" htmlFor="description">Description</label>
                                     <textarea className="form-control" id="description" name="description" value={formData.description} onChange={handleChange} required></textarea>
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label" htmlFor="image">Add More Images</label>
+                                    <input className="form-control" type="file" id="image" name="image" multiple onChange={handleChange} />
+                                </div>
+                                <div className="mb-3">
+                                    <p className="text-muted">Select images to delete</p>
+                                </div>
+                                <div className="row">
+                                    {formData.image.map((image, i) => {
+                                            return(<div className="col-6 mb-3" key={image.imageId}>
+                                                <div className="position-relative">
+                                                    <input type="checkbox" id={`image-${i}`} value={image.imageId} onChange={handleChange} checked={formData.deleteImages.includes(image.imageId)} style={{ display: 'none' }}/>
+                                                        <label htmlFor={`image-${i}`} style={{ cursor: 'pointer', display: 'block' }}>
+                                                            <img src={image.url} className="img-thumbnail w-100" alt="#" style={{ opacity: formData.deleteImages.includes(image.imageId) ? 0.5 : 1, border: formData.deleteImages.includes(image.imageId) ? '3px solid #198754' : '1px solid #dee2e6' }} />
+                                                            {formData.deleteImages.includes(image.imageId) && (
+                                                                <div className="position-absolute top-50 start-50 translate-middle bg-success text-white rounded-circle p-2 d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
+                                                                    <i className="bi bi-check-lg"></i>
+                                                                </div>
+                                                            )}
+                                                        </label>
+                                                </div>
+                                            </div>)
+                                    })}
                                 </div>
                                 <button className="btn btn-info w-100">Update Campground</button>
                             </form>

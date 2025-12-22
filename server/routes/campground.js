@@ -11,10 +11,10 @@ const upload=multer({storage});
 //the verification for page and author and page will be done on  the frontend    
 router.route('/')
     .get(loadAllCampground)
-    .post(isLoggedIn,upload.array('image'),verifyCampgrounds,createNewCampground)    
+    .post(isLoggedIn,verifyCampgrounds,upload.array('image'),createNewCampground)    
 
 router.route('/:id')
-    .patch(isLoggedIn,isAuthor,verifyCampgrounds,updateCampground)
+    .patch(isLoggedIn,isAuthor,upload.array('image'),verifyCampgrounds,updateCampground)
     .delete(isLoggedIn,isAuthor,deleteCampground)
     .get(showOneCampground)
 

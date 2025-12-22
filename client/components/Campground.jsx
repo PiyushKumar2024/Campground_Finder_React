@@ -49,15 +49,15 @@ const Campground = () => {
         }
     }
 
-    const handleDeleteReview=async(rid)=>{
-        try{
+    const handleDeleteReview = async (rid) => {
+        try {
             const token = localStorage.getItem('token');
             await axios.delete(`http://localhost:3000/campgrounds/${id}/reviews/${rid}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const res = await axios.get(`http://localhost:3000/campgrounds/${id}`);
             setCamp(res.data);
-        }catch(e){
+        } catch (e) {
             setError(e);
         }
     }
@@ -75,7 +75,7 @@ const Campground = () => {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.post(`http://localhost:3000/campgrounds/${id}/reviews`, 
+            await axios.post(`http://localhost:3000/campgrounds/${id}/reviews`,
                 { review: { rating, body } },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -98,7 +98,42 @@ const Campground = () => {
             <div className="row">
                 <div className="col-lg-6 mb-4">
                     <div className="card shadow-sm h-100">
-                        <img src={camp.image} className="card-img-top" alt="campground image" style={{ aspectRatio: '16/9', objectFit: 'cover' }} />
+                        
+                        <div id="campgroundCarousel" className="carousel slide" data-bs-ride="carousel">
+                            <div className="carousel-indicators">
+                                {camp.image.map((img, index) => (
+                                    <button
+                                        key={index}
+                                        type="button"
+                                        data-bs-target="#campgroundCarousel"
+                                        data-bs-slide-to={index}
+                                        className={index === 0 ? 'active' : ''}
+                                        aria-current={index === 0 ? 'true' : 'false'}
+                                        aria-label={`Slide ${index + 1}`}
+                                    ></button>
+                                ))}
+                            </div>
+                            <div className="carousel-inner">
+                                {camp.image.map((img, index) => (
+                                    <div key={img.url} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                                        <img src={img.url} className="d-block w-100" style={{ aspectRatio: '16/9', objectFit: 'cover' }} alt={`${camp.name} - image ${index + 1}`} />
+                                    </div>
+                                ))}
+                            </div>
+                            {camp.image.length > 1 && (
+                                <>
+                                    <button className="carousel-control-prev" type="button" data-bs-target="#campgroundCarousel" data-bs-slide="prev">
+                                        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span className="visually-hidden">Previous</span>
+                                    </button>
+                                    <button className="carousel-control-next" type="button" data-bs-target="#campgroundCarousel" data-bs-slide="next">
+                                        <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span className="visually-hidden">Next</span>
+                                    </button>
+                                </>
+                            )}
+                        </div>
+
                         <div className="card-body">
                             <h2 className="card-title">{camp.name}</h2>
                             <p className="card-text">{camp.description}</p>
@@ -157,7 +192,7 @@ const Campground = () => {
                                 <p className="card-text">{review.body}</p>
                                 <p className="card-text">By:{review.author.username}</p>
                                 {currentUser && currentUser.username === review.author.username && (
-                                    <button className="btn btn-sm btn-danger" onClick={()=>handleDeleteReview(review._id)}>Delete</button>
+                                    <button className="btn btn-sm btn-danger" onClick={() => handleDeleteReview(review._id)}>Delete</button>
                                 )}
                             </div>
                         </div>
