@@ -37,6 +37,7 @@ export const isReviewAuthor=catchAsync(async (req,res,next)=>{
 })
 
 export const verifyCampgrounds = (req, res, next) => {
+    console.log(req.body);
     const validation = campgroundsChecker.validate(req.body)
     if(validation.error){
         const message = validation.error.details.map(detail => detail.message).join(',')

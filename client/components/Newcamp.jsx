@@ -63,9 +63,26 @@ const NewCampForm = () => {
         }
     }
 
-    const handleChange=(e)=>{
+    const handleChange=async (e)=>{
         if(e.target.type==='file'){
-            const imageData=e.target.files;
+            let imageData=e.target.files;
+            if(imageData.length>5){
+                alert('NO more than 5 imags can be selected');
+            }
+            const dt=new DataTransfer();
+            for(let i=0;i<imageData.length;i++){
+                if(dt.items.length>=5) break;
+                const image=e.target.files[i];
+                if(image.size<5242880)dt.items.add(image);
+                else alert('No file should exceed the 5MB threshold');
+            }
+            e.target.files=dt.files;
+            //the browser's visual representation (the text inside the file input) 
+            // doesn't always clear automatically if the resulting list is empty 
+            if (e.target.files.length === 0) {
+                e.target.value = '';
+            }
+            imageData=e.target.files;
             setFormData((prev)=>({...prev,[e.target.name]:imageData}));
         }else{
         const {name,value}=e.target;
@@ -81,32 +98,52 @@ const NewCampForm = () => {
                         <div className="card-body p-4 p-md-5">
                             <h1 className="card-title text-center mb-4">Add a New Campground</h1>
                             {error && <div className="alert alert-danger">{error}</div>}
+
+                            {/* Form element with 'needs-validation' for Bootstrap validation styles. 
+                                'noValidate' prevents default browser validation bubbles so we can use custom styles. */}
                             <form className="needs-validation" noValidate onSubmit={handleSubmit}>
+
+                                {/* Name Input Section */}
                                 <div className="mb-3">
                                     <label className="form-label" htmlFor="name">Name of campground</label>
+
+                                    {/* Controlled input linked to formData.name. 'required' triggers validation error if empty. */}
                                     <input className="form-control" type="text" id="name" name="name" required onChange={handleChange} value={formData.name}/>
+
+                                        {/* Displayed only when form is submitted and input is invalid */}
                                         <div className="invalid-feedback">Name is required.</div>
                                 </div>
+
+                                {/* Price Input Section */}
                                 <div className="mb-3">
                                     <label className="form-label" htmlFor="price">Price</label>
                                     <input className="form-control" type="number" id="price" name="price" required onChange={handleChange} value={formData.price}/>
                                         <div className="invalid-feedback">Price is required.</div>
                                 </div>
+
+                                {/* Location Input Section */}
                                 <div className="mb-3">
                                     <label className="form-label" htmlFor="location">Location</label>
                                     <input className="form-control" type="text" id="location" name="location" required onChange={handleChange} value={formData.location}/>
                                         <div className="invalid-feedback">Location is required.</div>
                                 </div>
+
+                                {/* Description Input Section */}
                                 <div className="mb-3">
                                     <label className="form-label" htmlFor="description">Description</label>
                                     <input className="form-control" type="text" id="description" name="description" required onChange={handleChange} value={formData.description}/>
                                         <div className="invalid-feedback">Description is required.</div>
                                 </div>
+
+                                {/* File Upload Section */}
                                 <div className="mb-3">
                                     <label className="form-label" htmlFor="image">Upload Image:</label>
-                                    <input className="form-control" type="file" id="image" name="image" multiple required onChange={handleChange}/>
+                                    {/* 'multiple' allows selecting multiple files. 'accept' restricts selection to image types. */}
+                                    <input className="form-control" type="file" id="image" name="image" accept="image/*" multiple required onChange={handleChange}/>
                                         <div className="invalid-feedback">Atleast one image is required.</div>
                                 </div>
+                                
+                                {/* Submit Button: Disabled during loading state to prevent duplicate submissions */}
                                 <button className="btn btn-success w-100 py-2 mt-3 Uploading" type="submit" disabled={loading}>{loading?'Uploading':'Add'}</button>
                             </form>
                         </div>
