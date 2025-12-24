@@ -7,7 +7,16 @@ import { updateCampground, deleteCampground, createNewCampground,
 import { validateImages } from '../middlewares/validateImages.js';        
 
 const router=express.Router();
-const upload=multer({storage});
+const upload=multer({
+    storage,
+    limits:{fileSize:5*1024*1024}, //cant upload greater than 5MB
+    fileFilter:(req,file,cb)=>{ //check for mime type and then sends it
+        if(!file.mimetype.startsWith('image/')){
+            return cb(new Error('only images are allowed'),false);
+        }
+        cb(null,true);
+    }
+});
 
 //the verification for page and author and page will be done on  the frontend    
 router.route('/')

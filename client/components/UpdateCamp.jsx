@@ -16,6 +16,7 @@ const UpdateCamp = () => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [isUpdating, setIsUpdating] = useState(false);
 
     useEffect(() => {
         axios.get(`http://localhost:3000/campgrounds/${id}`)
@@ -69,6 +70,9 @@ const UpdateCamp = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isUpdating) return;
+        setIsUpdating(true);
+
         try {
             const token = localStorage.getItem('token');
             const data = new FormData();
@@ -93,6 +97,7 @@ const UpdateCamp = () => {
             navigate(`/campgrounds/${id}`);
         } catch (err) {
             setError(err.response?.data?.message || 'Update failed');
+            setIsUpdating(false);
         }
     };
 
@@ -101,7 +106,7 @@ const UpdateCamp = () => {
 
     return (
         // Container with top margin
-        <div className="container mt-5">
+        <div className="container mt-5 mx-auto">
             {/* Bootstrap Row for grid layout */}
             <div className="row">
                 {/* Centered column taking half width on medium screens */}
@@ -170,7 +175,7 @@ const UpdateCamp = () => {
                                             </div>)
                                     })}
                                 </div>
-                                <button className="btn btn-info w-100">Update Campground</button>
+                                <button className="btn btn-info w-100" disabled={isUpdating}>{isUpdating ? 'Updating...' : 'Update Campground'}</button>
                             </form>
                         </div>
                     </div>
