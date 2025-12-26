@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import {cloudinary,storage} from '../cloudinary/cloudinary.js'
+import {storage} from '../config/cloudinary.js'
 import {isLoggedIn,isAuthor,verifyCampgrounds} from '../middlewares/middleware.js';
 import { updateCampground, deleteCampground, createNewCampground, 
         loadAllCampground, showOneCampground, } from '../controllers/campgrounds.js';

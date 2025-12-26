@@ -7,11 +7,10 @@ import reviewsRoutes from './routes/reviews.js';
 import authenticationRoutes from './routes/user.js';
 import dotenv from 'dotenv';
 import passport from 'passport';
-import configureJwtStrategy from './passport.js';
+import configureJwtStrategy from './config/passport.js';
 import User from './models/user.js';
 import { Strategy as LocalStrategy} from 'passport-local';
 import cors from 'cors';
-
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

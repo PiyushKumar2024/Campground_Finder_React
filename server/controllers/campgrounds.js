@@ -1,6 +1,9 @@
 import catchAsync from '../helper/catchAsync.js';
 import Campground from '../models/campground.js';
-import { cloudinary } from '../cloudinary/cloudinary.js';
+import { cloudinary } from '../config/cloudinary.js';
+import * as maptilerClient from '@maptiler/client';
+
+maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
 //get the data for update camp page from show one camp and use it
 export const loadAllCampground = catchAsync(async (req, res) => {
@@ -9,10 +12,17 @@ export const loadAllCampground = catchAsync(async (req, res) => {
 })
 
 export const createNewCampground = catchAsync(async (req, res) => {
-    const { name, price, location, description } = req.body;
-    const camp = new Campground({ name, price, location, description });
+    const { name, price, location, description} = req.body;
+    const camp = new Campground({name, price, description, location});
     camp.author = req.user._id;
     camp.image = req.files.map(f => ({ url: f.url, imageId: f.public_id }));
+    const geoData = await maptilerClient.geocoding.forward(location);
+    if (!geoData.features || !geoData.features.length) {
+        throw new Error('Location not found. Please enter a valid location.');
+    }
+    camp.campLocation=geoData.features[0].geometry;
+
+    //at saving mong will check the validations
     await camp.save();
     res.status(201).json({ message: 'The campground is successfully created', _id: camp._id });
 })
@@ -20,7 +30,14 @@ export const createNewCampground = catchAsync(async (req, res) => {
 export const updateCampground = catchAsync(async (req, res) => {
     console.log(req.body);
     const { id } = req.params;
-    const camp = await Campground.findByIdAndUpdate(id, req.body, { new: true });
+    if(req.body.location){
+        const geoData = await maptilerClient.geocoding.forward(req.body.location);
+        if (!geoData.features || !geoData.features.length) {
+            throw new Error('Location not found. Please enter a valid location.');
+        }
+        req.body.campLocation=geoData.features[0].geometry;
+    }
+    const camp=await Campground.findByIdAndUpdate(id,req.body,{new:true});
     if(req.files){
         const imgs = req.files.map(f => ({ url: f.url, imageId: f.public_id }));
         camp.image.push(...imgs);

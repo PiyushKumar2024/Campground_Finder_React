@@ -92,60 +92,74 @@ const NewCampForm = () => {
 
     return (
         <div className="container my-5">
-            <div className="row">
-                <div className="col-lg-6 mx-auto">
-                    <div className="card shadow-sm">
-                        <div className="card-body p-4 p-md-5">
-                            <h1 className="card-title text-center mb-4">Add a New Campground</h1>
-                            {error && <div className="alert alert-danger">{error}</div>}
-
-                            {/* Form element with 'needs-validation' for Bootstrap validation styles. 
-                                'noValidate' prevents default browser validation bubbles so we can use custom styles. */}
-                            <form className="needs-validation" noValidate onSubmit={handleSubmit}>
-
-                                {/* Name Input Section */}
-                                <div className="mb-3">
-                                    <label className="form-label" htmlFor="name">Name of campground</label>
-
-                                    {/* Controlled input linked to formData.name. 'required' triggers validation error if empty. */}
-                                    <input className="form-control" type="text" id="name" name="name" required onChange={handleChange} value={formData.name}/>
-
-                                        {/* Displayed only when form is submitted and input is invalid */}
-                                        <div className="invalid-feedback">Name is required.</div>
+            <div className="row justify-content-center">
+                <div className="col-lg-10 col-xl-9">
+                    <div className="card shadow-lg border-0 rounded-4 overflow-hidden">
+                        <div className="row g-0">
+                            {/* Image Section - Hidden on small screens */}
+                            <div className="col-md-6 d-none d-md-block position-relative bg-dark">
+                                <img 
+                                    src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
+                                    alt="Campground" 
+                                    className="w-100 h-100"
+                                    style={{ objectFit: 'cover', position: 'absolute', top: 0, left: 0 }}
+                                />
+                                <div className="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-25"></div>
+                                <div className="position-absolute bottom-0 start-0 p-4 text-white">
+                                    <h3 className="fw-bold">Share Your Spot</h3>
+                                    <p className="mb-0">Add a new campground to our growing collection.</p>
                                 </div>
+                            </div>
 
-                                {/* Price Input Section */}
-                                <div className="mb-3">
-                                    <label className="form-label" htmlFor="price">Price</label>
-                                    <input className="form-control" type="number" id="price" name="price" required onChange={handleChange} value={formData.price}/>
-                                        <div className="invalid-feedback">Price is required.</div>
-                                </div>
+                            {/* Form Section */}
+                            <div className="col-md-6 bg-white">
+                                <div className="card-body p-4 p-lg-5">
+                                    <div className="d-flex align-items-center mb-4">
+                                        <i className="bi bi-compass-fill text-success fs-2 me-2"></i>
+                                        <h3 className="fw-bold m-0 text-secondary">YelpCamp</h3>
+                                    </div>
+                                    
+                                    <h5 className="mb-4 text-muted">Add a New Campground</h5>
 
-                                {/* Location Input Section */}
-                                <div className="mb-3">
-                                    <label className="form-label" htmlFor="location">Location</label>
-                                    <input className="form-control" type="text" id="location" name="location" required onChange={handleChange} value={formData.location}/>
-                                        <div className="invalid-feedback">Location is required.</div>
-                                </div>
+                                    {error && <div className="alert alert-danger d-flex align-items-center"><i className="bi bi-exclamation-circle-fill me-2"></i>{error}</div>}
 
-                                {/* Description Input Section */}
-                                <div className="mb-3">
-                                    <label className="form-label" htmlFor="description">Description</label>
-                                    <input className="form-control" type="text" id="description" name="description" required onChange={handleChange} value={formData.description}/>
-                                        <div className="invalid-feedback">Description is required.</div>
-                                </div>
+                                    <form className="needs-validation" noValidate onSubmit={handleSubmit}>
+                                        <div className="form-floating mb-3">
+                                            <input className="form-control" type="text" id="name" name="name" placeholder="Campground Name" required onChange={handleChange} value={formData.name}/>
+                                            <label htmlFor="name">Name of campground</label>
+                                            <div className="invalid-feedback">Name is required.</div>
+                                        </div>
 
-                                {/* File Upload Section */}
-                                <div className="mb-3">
-                                    <label className="form-label" htmlFor="image">Upload Image:</label>
-                                    {/* 'multiple' allows selecting multiple files. 'accept' restricts selection to image types. */}
-                                    <input className="form-control" type="file" id="image" name="image" accept="image/*" multiple required onChange={handleChange}/>
-                                        <div className="invalid-feedback">Atleast one image is required.</div>
+                                        <div className="form-floating mb-3">
+                                            <input className="form-control" type="number" id="price" name="price" placeholder="Price" required onChange={handleChange} value={formData.price}/>
+                                            <label htmlFor="price">Price</label>
+                                            <div className="invalid-feedback">Price is required.</div>
+                                        </div>
+
+                                        <div className="form-floating mb-3">
+                                            <input className="form-control" type="text" id="location" name="location" placeholder="Location" required onChange={handleChange} value={formData.location}/>
+                                            <label htmlFor="location">Location</label>
+                                            <div className="invalid-feedback">Location is required.</div>
+                                        </div>
+
+                                        <div className="form-floating mb-3">
+                                            <input className="form-control" type="text" id="description" name="description" placeholder="Description" required onChange={handleChange} value={formData.description}/>
+                                            <label htmlFor="description">Description</label>
+                                            <div className="invalid-feedback">Description is required.</div>
+                                        </div>
+
+                                        <div className="mb-4">
+                                            <label className="form-label text-muted small" htmlFor="image">Upload Images</label>
+                                            <input className="form-control" type="file" id="image" name="image" accept="image/*" multiple required onChange={handleChange} />
+                                            <div className="invalid-feedback">At least one image is required.</div>
+                                        </div>
+                                        
+                                        <div className="d-grid">
+                                            <button className="btn btn-success btn-lg Uploading" type="submit" disabled={loading}>{loading?'Uploading...':'Add Campground'}</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                
-                                {/* Submit Button: Disabled during loading state to prevent duplicate submissions */}
-                                <button className="btn btn-success w-100 py-2 mt-3 Uploading" type="submit" disabled={loading}>{loading?'Uploading':'Add'}</button>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,22 +1,4 @@
-import mongooose from 'mongoose';
-import User from './user.js';
-const Schema = mongooose.Schema
+import mongoose from 'mongoose';
+import {review} from '../schemas/reviewSchema.js';
 
-const review = new Schema({
-    // name: {
-    //     type: String,
-    //     required: true
-    // },
-    date: {
-        type: Date,
-        default:Date.now
-    },
-    body: { type: String },
-    rating: { type: Number },
-    author:{
-        type:Schema.Types.ObjectId,
-        ref:'User'
-     }
-})
-
-export default mongooose.model('Review', review);
+export default mongoose.model('Review', review);

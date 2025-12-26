@@ -2,8 +2,12 @@ import mongoose from 'mongoose'
 import Campground from '../models/campground.js'
 import { data as cities } from './cities.js'
 import { places, descriptors } from './seedhelper.js'
+import dotenv from 'dotenv';
 
-mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp')
+dotenv.config({path:'../.env'});
+const URL=process.env.MONGO_URL;
+
+mongoose.connect(URL)
     .then(() => {
         console.log('successfully connected with mongodb')
         console.log('yay')
@@ -35,11 +39,22 @@ const seed = async () => {
     await Campground.deleteMany()
     for (let i = 0; i < 100; i++) {
         const random = Math.floor(Math.random()*cities.length)
+        const sample =`${cities[random].city} ${cities[random].state}`;
         const camp = new Campground({
             author:'693d1a84236fcf82f6fe7706',
-            location: `${cities[random].city},${cities[random].state}`,
+            location:sample,
+            campLocation: {
+                type: 'Point',
+                coordinates: [
+                    cities[random].longitude,
+                    cities[random].latitude,
+                ]
+            },
             price: Math.floor((Math.random()) * 1000 + 200),
-            description: 'just a random campgrounds',
+            description:`This dataset is meant to be used with other datasets that have features like 
+            country and city but no latitude/longitude. It is simply a list of cities in the world. Being 
+            able to put cities on a map will help people tell their stories more effectively. Another 
+            way to think about it is that you can use this make more pretty graphs!`,
             image: [
                 sampleImages[Math.floor(Math.random() * sampleImages.length)],
                 sampleImages[Math.floor(Math.random() * sampleImages.length)]
