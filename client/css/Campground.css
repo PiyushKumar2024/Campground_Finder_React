@@ -1,0 +1,24 @@
+.vertical-scrollable {
+    max-height: 800px; /* Matches your map height roughly */
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 10px;
+}
+
+/* Scoped to vertical-scrollable to avoid breaking other parts of the app */
+.vertical-scrollable .col-sm-8 {
+    color: white;
+    font-size: 24px;
+    padding-bottom: 20px;
+    padding-top: 18px;
+}
+
+.vertical-scrollable .col-sm-8:nth-child(2n+1) {
+    background: white;
+    color: black;
+}
+
+.vertical-scrollable .col-sm-8:nth-child(2n+2) {
+    background: white;
+    color: black;
+}

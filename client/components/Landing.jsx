@@ -237,7 +237,7 @@ const Home = () => {
                         <h3>Ready to start your adventure?</h3>
                         <p className="text-muted mb-4">Join thousands of happy campers today.</p>
                         <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                            <Link to="/register" className="btn btn-outline-success btn-lg px-4 gap-3">Create an Account</Link>
+                            <Link to="/user/register" className="btn btn-outline-success btn-lg px-4 gap-3">Create an Account</Link>
                             <Link to="/campgrounds/new" className="btn btn-success btn-lg px-4">Add a Campground</Link>
                         </div>
                     </div>

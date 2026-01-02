@@ -12,8 +12,8 @@ export const loadAllCampground = catchAsync(async (req, res) => {
 })
 
 export const createNewCampground = catchAsync(async (req, res) => {
-    const { name, price, location, description} = req.body;
-    const camp = new Campground({name, price, description, location});
+    const { name, price, location, description, amenity, authorDesc, checkin, checkout, camprules } = req.body;
+    const camp = new Campground({ name, price, description, location, amenity, authorDesc, checkin, checkout, camprules });
     camp.author = req.user._id;
     camp.image = req.files.map(f => ({ url: f.url, imageId: f.public_id }));
     const geoData = await maptilerClient.geocoding.forward(location);
@@ -28,7 +28,6 @@ export const createNewCampground = catchAsync(async (req, res) => {
 })
 
 export const updateCampground = catchAsync(async (req, res) => {
-    console.log(req.body);
     const { id } = req.params;
     if(req.body.location){
         const geoData = await maptilerClient.geocoding.forward(req.body.location);
@@ -62,7 +61,6 @@ export const updateCampground = catchAsync(async (req, res) => {
 })
 
 export const deleteCampground = catchAsync(async (req, res) => {
-    console.log(req.body);
     const { id } = req.params;
     const deletedCamp = await Campground.findByIdAndDelete(id);
     //deletion from cloudinary is handled in schema

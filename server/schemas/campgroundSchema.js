@@ -8,23 +8,40 @@ export const campgrounds=new Schema({
         type:String,
         required:true
      },
-
      price:{
         type:Number,
         required:true
      },
-
      description:{
         type:String,
         required:true
      },
-
+     checkin: {
+        type: String,
+        required: true
+     },
+     checkout: {
+        type: String,
+        required: true
+     },
+     camprules: {
+        type: [String],
+        required: true
+     },
      location:{
         type:String,
         required:true
      },
      campLocation:{ 
          type:pointSchema,
+         required:true
+      },
+      amenity:{
+         type:[String],
+         required:true
+      },
+      authorDesc:{
+         type:String,
          required:true
       },
       image:{
@@ -42,13 +59,11 @@ export const campgrounds=new Schema({
          ],
          required:true
      },
-
      //author will be singular but there can be many reviews
      author:{
         type:Schema.Types.ObjectId,
         ref:'User'
      },
-
      reviews:[{
          type:Schema.Types.ObjectId,
          ref:'Review'

@@ -1,7 +1,11 @@
 import mongoose from 'mongoose'
 import Campground from '../models/campground.js'
+import User from '../models/user.js'
 import { data as cities } from './cities.js'
-import { places, descriptors } from './seedhelper.js'
+import { places, descriptors } from './descriptions.js'
+import {allAmenities} from './amenity.js'
+import { authorBios } from './authorDesc.js'
+import { sampleImages } from './sampleImages.js'
 import dotenv from 'dotenv';
 
 dotenv.config({path:'../.env'});
@@ -17,31 +21,27 @@ mongoose.connect(URL)
         console.log(err)
     })
 
-const sampleImages = [
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362679/samples/landscapes/beach-boat.jpg', imageId: 'samples/landscapes/beach-boat' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362682/samples/landscapes/nature-mountains.jpg', imageId: 'samples/landscapes/nature-mountains' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362669/samples/landscapes/landscape-panorama.jpg', imageId: 'samples/landscapes/landscape-panorama' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362672/samples/landscapes/architecture-signs.jpg', imageId: 'samples/landscapes/architecture-signs' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362665/samples/landscapes/girl-urban-view.jpg', imageId: 'samples/landscapes/girl-urban-view' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362675/samples/animals/three-dogs.jpg', imageId: 'samples/animals/three-dogs' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362675/samples/animals/reindeer.jpg', imageId: 'samples/animals/reindeer' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362671/samples/people/bicycle.jpg', imageId: 'samples/people/bicycle' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362652/samples/people/kitchen-bar.jpg', imageId: 'samples/people/kitchen-bar' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362645/samples/chair.jpg', imageId: 'samples/chair' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg', imageId: 'sample' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362641/samples/sheep.jpg', imageId: 'samples/sheep' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362655/samples/people/jazz.jpg', imageId: 'samples/people/jazz' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362645/samples/food/spices.jpg', imageId: 'samples/food/spices' },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1572362653/samples/food/fish-vegetables.jpg', imageId: 'samples/food/fish-vegetables' }
-]
-
 const seed = async () => {
     await Campground.deleteMany()
+    await User.deleteMany({})
+    const user = new User({
+        email: 'test@gmail.com',
+        username: 'test',
+        joined: new Date(),
+        bio: 'I am a test user',
+        phoneNum: '1234567890',
+        role: 'host'
+    })
+    const registeredUser = await User.register(user, 'password')
     for (let i = 0; i < 100; i++) {
         const random = Math.floor(Math.random()*cities.length)
         const sample =`${cities[random].city} ${cities[random].state}`;
+        const ind=[Math.floor(Math.random()*allAmenities.length),
+            Math.floor(Math.random()*allAmenities.length),
+            Math.floor(Math.random()*allAmenities.length)];
+
         const camp = new Campground({
-            author:'693d1a84236fcf82f6fe7706',
+            author: registeredUser._id,
             location:sample,
             campLocation: {
                 type: 'Point',
@@ -55,11 +55,20 @@ const seed = async () => {
             country and city but no latitude/longitude. It is simply a list of cities in the world. Being 
             able to put cities on a map will help people tell their stories more effectively. Another 
             way to think about it is that you can use this make more pretty graphs!`,
+            checkin: '14:00',
+            checkout: '11:00',
+            camprules: [
+                'Quiet hours are from 10 PM to 7 AM.',
+                'No open fires outside designated fire rings.',
+                'Pets must be leashed at all times.'
+            ],
+            authorDesc:authorBios[Math.floor(Math.random()*50)],
             image: [
                 sampleImages[Math.floor(Math.random() * sampleImages.length)],
                 sampleImages[Math.floor(Math.random() * sampleImages.length)]
             ],
-            name: `${descriptors[random % (descriptors.length)]} ${places[random % (places.length)]}`
+            name: `${descriptors[random % (descriptors.length)]} ${places[random % (places.length)]}`,
+            amenity:[allAmenities[ind[1]],allAmenities[ind[0]],allAmenities[ind[2]]]
         })
         await camp.save()
     }

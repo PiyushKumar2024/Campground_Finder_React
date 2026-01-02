@@ -16,6 +16,7 @@ import NewCampForm from '../components/Newcamp.jsx';
 import Campground from '../components/Campground.jsx';
 import RequireAuth from '../components/RequireAuth.jsx';
 import UpdateCamp from '../components/UpdateCamp.jsx';
+import UserProfile from '../components/UserProfile.jsx';
 import { Provider } from 'react-redux';
 import { store } from '../redux/store.js';
 
@@ -54,22 +55,20 @@ const router=createBrowserRouter([
     ]
   },
   {
-    path:'/register',
+    path:'/user',
     element:<Layout/>,
     children:[
       {
-        path:'',
-        element:<Register/>
-      }
-    ]
-  },
-  {
-    path:'/login',
-    element:<Layout/>,
-    children:[
-      {
-        path:'',
+        path:'login',
         element:<Login/>
+      },
+      {
+        path:'register',
+        element:<Register/>
+      },
+      {
+        path:':id',
+        element:<RequireAuth><UserProfile/></RequireAuth>
       }
     ]
   }

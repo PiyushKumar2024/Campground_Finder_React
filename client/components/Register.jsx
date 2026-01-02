@@ -11,8 +11,12 @@ const Register = () => {
     const [formData,setFormData]=useState({
         username:'',
         email:'',
-        password:''
+        password:'',
+        bio: '',
+        phoneNum: '',
+        role: 'camper'
     })
+    const [image, setImage] = useState(null);
     const [error,setError]=useState('');//for holding error message from the server
     const dispatch=useDispatch();
 
@@ -21,9 +25,16 @@ const Register = () => {
         event.preventDefault();
         if (form.checkValidity() === true) {
            try{
-                const response=await axios.post('http://localhost:3000/register',formData);
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('user', JSON.stringify(response.data));
+                const data = new FormData();
+                for (const key in formData) {
+                    data.append(key, formData[key]);
+                }
+                if (image) {
+                    data.append('image', image);
+                }
+                const response=await axios.post('http://localhost:3000/user/register', data);
+                localStorage.setItem('token', response.data.token); // Keep token for auth
+                localStorage.setItem('user', JSON.stringify(response.data.user)); // Store only the user object
                 dispatch(login(response.data));
                 navigate('/campgrounds');
            }catch(err){
@@ -41,6 +52,10 @@ const Register = () => {
         setFormData((prev)=>{
             return {...prev,[name]:value};
         })
+    }
+
+    const handleImageChange = (e) => {
+        setImage(e.target.files[0]);
     }
 
     return (
@@ -76,6 +91,28 @@ const Register = () => {
                                             <input type="password" id="password" name="password" required className="form-control" placeholder="Password" onChange={handleChange} value={formData.password} />
                                             <label htmlFor="password">Password</label>
                                             <div className="invalid-feedback">Password is required.</div>
+                                        </div>
+                                        <div className="form-floating mb-3">
+                                            <textarea id="bio" name="bio" className="form-control" placeholder="Bio" style={{height: '100px'}} onChange={handleChange} value={formData.bio}></textarea>
+                                            <label htmlFor="bio">Bio</label>
+                                        </div>
+                                        <div className="form-floating mb-3">
+                                            <input type="text" id="phoneNum" name="phoneNum" className="form-control" placeholder="Phone Number" pattern="[0-9]{10}" onChange={handleChange} value={formData.phoneNum} />
+                                            <label htmlFor="phoneNum">Phone Number (10 digits)</label>
+                                            <div className="invalid-feedback">Please enter a valid 10-digit phone number.</div>
+                                        </div>
+                                        <div className="form-floating mb-3">
+                                            <select className="form-select" id="role" name="role" value={formData.role} onChange={handleChange}>
+                                                <option value="camper">Camper</option>
+                                                <option value="host">Host</option>
+                                                <option value="admin">Admin</option>
+                                            </select>
+                                            <label htmlFor="role">Select Role</label>
+                                            <div className="form-text">Available roles: Camper, Host, Admin</div>
+                                        </div>
+                                        <div className="mb-4">
+                                            <label htmlFor="image" className="form-label">Profile Image</label>
+                                            <input type="file" className="form-control" id="image" name="image" onChange={handleImageChange} accept="image/*"/>
                                         </div>
                                         <div className="d-grid">
                                             <button className="btn btn-success btn-lg" type="submit">Register</button>

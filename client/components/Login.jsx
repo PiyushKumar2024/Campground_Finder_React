@@ -26,10 +26,10 @@ const Login = () => {
         if (form.checkValidity() === true) {
             try {
                 console.log("Sending request to server..."); // Debug: Check if axios starts
-                const response = await axios.post('http://localhost:3000/login', formData);
+                const response = await axios.post('http://localhost:3000/user/login', formData);
                 console.log("Server response:", response.data); // Debug: Check success
                 localStorage.setItem('token', response.data.token);
-                localStorage.setItem('user', JSON.stringify(response.data));
+                localStorage.setItem('user', JSON.stringify(response.data.user));
                 dispatch(login(response.data));
                 //replaces the current entry in the history stack
                 console.log("Navigating to:", from); // Debug: Check navigation

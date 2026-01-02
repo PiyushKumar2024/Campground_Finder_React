@@ -4,7 +4,7 @@ import { logout } from '../redux/featuresRedux/userSlice';
 
 const Navbar = () => {
 
-    const { isLoggedIn } = useSelector((state) => state.user);
+    const { isLoggedIn, user } = useSelector((state) => state.user);
     const dispatch=useDispatch();
     const navigate = useNavigate();
 
@@ -32,20 +32,30 @@ const Navbar = () => {
                         <li className="nav-item"><NavLink to="/campgrounds" className="nav-link" end>Campgrounds</NavLink></li>
                         <li className="nav-item"><NavLink to="/campgrounds/new" className="nav-link">New Camp</NavLink></li>
                     </ul>
-                    <div className="d-flex">
+                    <div className="d-flex align-items-center">
                         {!isLoggedIn ? (
                             <>
-                                <Link to="/register" className="btn btn-success me-2">
+                                <Link to="/user/register" className="btn btn-success me-2">
                                     <i className="bi bi-person-plus-fill"></i> Register
                                 </Link>
-                                <Link to="/login" className="btn btn-outline-dark me-2">
+                                <Link to="/user/login" className="btn btn-outline-dark me-2">
                                     <i className="bi bi-box-arrow-in-right"></i> Login
                                 </Link>
                             </>
                         ) : (
-                            <button className="btn btn-outline-dark me-2" onClick={handleLogout}>
-                                <i className="bi bi-box-arrow-right"></i> Logout
-                            </button>
+                            <>
+                                <Link to={`/user/${user?.id}`} className="me-3">
+                                    <img 
+                                        src={user?.image?.url || 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg'} 
+                                        alt="Profile" 
+                                        className="rounded-circle border"
+                                        style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+                                    />
+                                </Link>
+                                <button className="btn btn-outline-dark me-2" onClick={handleLogout}>
+                                    <i className="bi bi-box-arrow-right"></i> Logout
+                                </button>
+                            </>
                         )}
                     </div>
                 </div>

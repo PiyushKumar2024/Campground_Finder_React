@@ -5,11 +5,23 @@ const validSchema=joi.object({
         price:joi.number().required().min(0),
         location:joi.string().required().max(100),
         description:joi.string().required().max(400),
+        authorDesc:joi.string().required().max(300),
+        checkin: joi.string().required(),
+        checkout: joi.string().required(),
+        // Allow a single string (for a single rule) or an array of strings
+        camprules: joi.alternatives().try(
+            joi.array().items(joi.string().allow('')),
+            joi.string().allow('')
+        ).required(),
         image:joi.array().optional(),
         deleteImages: joi.alternatives().try(
             joi.array().items(joi.string()),
             joi.string()
-        ).optional()
+        ).optional(),
+        amenity:joi.alternatives().try(
+            joi.array().items(joi.string()),
+            joi.string()
+        ).required()
     })
  
 export default validSchema;   

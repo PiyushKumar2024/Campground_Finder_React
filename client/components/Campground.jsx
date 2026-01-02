@@ -2,13 +2,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import '../css/StarRating.css';
-import '../css/Campground.css'
+import '../css/Campground.css';
 import axios from "axios";
 import Error from "./Error";
 import { useSelector } from "react-redux";
 import { Map, MapStyle, config, Marker, Popup } from '@maptiler/sdk';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
 import * as turf from '@turf/turf';
+import { amenityOptions } from "../config/icons";
+import HostProfile from "./hostprofile";
+import WeatherWidget from "./WeatherWidget";
 
 const MAPTILER_API_KEY = import.meta.env.VITE_MAPTILER_API_KEY;
 config.apiKey = MAPTILER_API_KEY;
@@ -65,7 +68,7 @@ const Campground = () => {
                 projection: "globe",
                 style: MapStyle.HYBRID,
                 center: camp.campLocation.coordinates,
-                zoom: 5,
+                zoom: 10,
                 pitch: 60,
                 bearing: -17.6,
                 terrainControl: false,
@@ -215,72 +218,122 @@ const Campground = () => {
     if (loading) return <h1>Loading...</h1>;
     if (error) return <Error err={error} />;
 
-
-    console.log(camp);
     return (
-        <div className="container mt-4" id='parent'>
-            <div className="row">
-                {/* Map Container */}
-                <div ref={mapRef} className="col-12" style={{ height: '600px', marginBottom: '20px',width:'400px' }}></div>
-                <div className="col-lg-6 mb-4">
-                    <div className="card shadow-sm h-100">
+        <>
+            {/* Map Container */}
 
-                        <div id="campgroundCarousel" className="carousel slide" data-bs-ride="carousel">
-                            <div className="carousel-indicators">
-                                {camp.image.map((img, index) => (
-                                    <button
-                                        key={index}
-                                        type="button"
-                                        data-bs-target="#campgroundCarousel"
-                                        data-bs-slide-to={index}
-                                        className={index === 0 ? 'active' : ''}
-                                        aria-current={index === 0 ? 'true' : 'false'}
-                                        aria-label={`Slide ${index + 1}`}
-                                    ></button>
-                                ))}
-                            </div>
-                            <div className="carousel-inner">
-                                {camp.image.map((img, index) => (
-                                    <div key={img.url} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                                        <img src={img.url} className="d-block w-100" style={{ aspectRatio: '16/9', objectFit: 'cover' }} alt={`${camp.name} - image ${index + 1}`} />
+            <div className="mt-4">
+                <h2
+                    className="text-center mb-3 text-uppercase fs-1 fw-bold">{camp.name}</h2>
+                <p className="text-center mb-4 mx-8">{camp.description}</p>
+            </div>
+
+            <div className="mb-3">
+                {amenityOptions.map(cat => {
+                    
+                    return (
+                        <div key={cat.name}>
+                            <h6>{cat.name}</h6>
+                            {cat.amenities.map(element => {
+
+                                const selected = camp.amenity.includes(element.value);
+                                return (
+                                    <div key={element.value} style={{ height: 'fit-content', width: 'fit-content' }}>
+                                        {selected ? element.activeIcon : element.passiveIcon}
+                                        <label htmlFor={element.value} className={selected ? 'text-black' : 'text-gray-400'}>{element.label}</label>
                                     </div>
-                                ))}
-                            </div>
-                            {camp.image.length > 1 && (
-                                <>
-                                    <button className="carousel-control-prev" type="button" data-bs-target="#campgroundCarousel" data-bs-slide="prev">
-                                        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span className="visually-hidden">Previous</span>
-                                    </button>
-                                    <button className="carousel-control-next" type="button" data-bs-target="#campgroundCarousel" data-bs-slide="next">
-                                        <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span className="visually-hidden">Next</span>
-                                    </button>
-                                </>
-                            )}
+                                )
+                            })}
                         </div>
+                    )
+                })}
+            </div>
 
-                        <div className="card-body">
-                            <h2 className="card-title">{camp.name}</h2>
-                            <p className="card-text">{camp.description}</p>
-                        </div>
-                        <ul className="list-group list-group-flush">
-                            <li className="list-group-item text-muted">{camp.location}</li>
-                            {userDistance && <li className="list-group-item text-success fw-bold">Your Distance: {userDistance.toFixed(2)} km away</li>}
-                            {clickedDistance && <li className="list-group-item text-primary fw-bold">Selected Distance: {clickedDistance.toFixed(2)} km</li>}
-                            <li className="list-group-item">${camp.price} per night</li>
-                            <li className="list-group-item">Created by:{camp.author.username}</li>
-                        </ul>
-                        {currentUser && currentUser.username === camp.author.username && (
-                            <div className="card-body">
-                                <Link to={`/campgrounds/edit/${camp._id}`} className="btn btn-info">Edit</Link>
-                                <button className="btn btn-danger" onClick={handleDeleteCamp}>Delete</button>
-                            </div>
-                        )}
+            <div className="row p-3">
+
+                <div id="campgroundCarousel" className="carousel slide col-lg-6 p-2" data-bs-ride="carousel">
+                    <div className="carousel-indicators">
+                        {camp.image.map((img, index) => (
+                            <button
+                                key={index}
+                                type="button"
+                                data-bs-target="#campgroundCarousel"
+                                data-bs-slide-to={index}
+                                className={index === 0 ? 'active' : ''}
+                                aria-current={index === 0 ? 'true' : 'false'}
+                                aria-label={`Slide ${index + 1}`}
+                            ></button>
+                        ))}
                     </div>
+                    <div className="carousel-inner">
+                        {camp.image.map((img, index) => (
+                            <div key={img.url} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                                <img src={img.url} className="d-block w-100 rounded-5" style={{ aspectRatio: '16/9', objectFit: 'cover' }} alt={`${camp.name} - image ${index + 1}`} />
+                            </div>
+                        ))}
+                    </div>
+                    {camp.image.length > 1 && (
+                        <>
+                            <button className="carousel-control-prev" type="button" data-bs-target="#campgroundCarousel" data-bs-slide="prev">
+                                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span className="visually-hidden">Previous</span>
+                            </button>
+                            <button className="carousel-control-next" type="button" data-bs-target="#campgroundCarousel" data-bs-slide="next">
+                                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span className="visually-hidden">Next</span>
+                            </button>
+                        </>
+                    )}
                 </div>
 
                 <div className="col-lg-6">
+                    {/* Weather Widget */}
+                    {camp.campLocation && camp.campLocation.coordinates && (
+                        <WeatherWidget lat={camp.campLocation.coordinates[1]} lng={camp.campLocation.coordinates[0]} />
+                    )}
+
+                    <ul className="list-group list-group-flush">
+                        <li className="list-group-item text-muted">{camp.location}</li>
+                        <li className="list-group-item">${camp.price} per night</li>
+                        {camp.checkin && camp.checkout && (
+                            <li className="list-group-item">
+                                <span className="fw-bold">Check-in:</span> {camp.checkin} <span className="mx-2">|</span> <span className="fw-bold">Check-out:</span> {camp.checkout}
+                            </li>
+                        )}
+                        {camp.camprules && camp.camprules.length > 0 && (
+                            <li className="list-group-item">
+                                <div className="fw-bold">Rules</div>
+                                <ul className="list-group list-group-flush">
+                                    {camp.camprules.map((rule, index) => (
+                                        <li key={index} className="list-group-item border-0 py-1 small text-muted">
+                                            <i className="bi bi-pin-angle-fill text-secondary me-2"></i>{rule}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </li>
+                        )}
+                    </ul>
+                    {currentUser && currentUser.username === camp.author.username && (
+                        <div className="card-body">
+                            <Link to={`/campgrounds/edit/${camp._id}`} className="btn btn-info">Edit</Link>
+                            <button className="btn btn-danger" onClick={handleDeleteCamp}>Delete</button>
+                        </div>
+                    )}
+                    <div className="mt-3">
+                        <HostProfile user={camp.author} camp={camp} />
+                    </div>
+                </div>
+            </div>
+
+            <div className="row p-3">
+                <div className="col-lg-6">
+                    <div ref={mapRef} style={{ height: '1000px', marginBottom: '20px', width: '100%', borderRadius: '10px' }}></div>
+                </div>
+                <div className="col-lg-6">
+                    <div className="col-lg-6 m-2">
+                        {userDistance && <li className="list-group-item text-success fw-bold">Your Distance: {userDistance.toFixed(2)} km away</li>}
+                        {clickedDistance && <li className="list-group-item text-primary fw-bold">Selected Distance: {clickedDistance.toFixed(2)} km</li>}
+                    </div>
                     {currentUser && (
                         <div className="card shadow-sm mb-4">
                             <div className="card-body">
@@ -310,24 +363,34 @@ const Campground = () => {
                         </div>
                     )}
 
-                    {camp.reviews.map(review => (
-                        <div className="card mb-3" key={review._id}>
-                            <div className="card-body">
-                                <h5>Rating</h5>
-                                <p className="starability-result" data-rating={review.rating}>
-                                    Rated: {review.rating} stars
-                                </p>
-                                <p className="card-text">{review.body}</p>
-                                <p className="card-text">By:{review.author.username}</p>
-                                {currentUser && currentUser.username === review.author.username && (
-                                    <button className="btn btn-sm btn-danger" onClick={() => handleDeleteReview(review._id)}>Delete</button>
-                                )}
+                    <div className="vertical-scrollable">
+                        {camp.reviews.map(review => (
+                            <div className="card mb-3 shadow-sm" key={review._id}>
+                                <div className="card-body">
+                                    <h5 className="card-title">Rating: {review.rating}</h5>
+                                    <p className="starability-result" data-rating={review.rating}>
+                                        Rated: {review.rating} stars
+                                    </p>
+                                    <p className="card-text">{review.body}</p>
+                                    <p className="card-text text-muted small">
+                                        By: <span className="fw-bold">{review.author.username}</span>
+                                    </p>
+                                    {currentUser && currentUser.username === review.author.username && (
+                                        <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteReview(review._id)}>Delete</button>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
+
                 </div>
+
             </div>
-        </div>
+
+
+
+
+        </>
     )
 }
 

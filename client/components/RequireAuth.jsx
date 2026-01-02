@@ -14,7 +14,7 @@ const RequireAuth = ({ children }) => {
     if (!isLoggedIn && !token) {
         // Redirect to the login page, but save the current location they were trying to go to
         // This allows you to redirect them back there after they login
-        return <Navigate to="/login" state={{ from: location, message: 'You must be signed in first!' }} replace />;
+        return <Navigate to="/user/login" state={{ from: location, message: 'You must be signed in first!' }} replace />;
 
         //see the Navigate Tab
     }
