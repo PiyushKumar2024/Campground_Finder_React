@@ -1,0 +1,51 @@
+body {
+        background-color: #fff; /* A clean, bright white background */
+    }
+
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://images.unsplash.com/photo-1476041800959-2f6bb412c8ce?q=80&w=2070&auto=format&fit=crop') no-repeat center center;
+        background-size: cover;
+        height: 60vh;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .hero-section h1, .hero-section p {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .card {
+        transition: transform .2s ease-in-out, box-shadow .2s ease-in-out;
+        overflow: hidden; /* To contain the zoomed image */
+    }
+    .card:hover {
+        transform: translateY(-5px); /* Lift the card up slightly */
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; /* A softer shadow */
+    }
+
+    .card-img-container {
+        position: relative;
+    }
+
+    .card-img-top {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .card-img-overlay-bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+        color: white;
+        padding: 1.5rem 1rem 0.75rem;
+        font-size: 0.9rem;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
