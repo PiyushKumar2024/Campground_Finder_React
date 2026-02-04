@@ -296,6 +296,12 @@ const Campground = () => {
                     <ul className="list-group list-group-flush">
                         <li className="list-group-item text-muted">{camp.location}</li>
                         <li className="list-group-item">${camp.price} per night</li>
+                        {camp.bookingCount !== undefined && (
+                            <li className="list-group-item">
+                                <i className="bi bi-calendar-check me-2 text-success"></i>
+                                <span className="fw-bold">{camp.bookingCount}</span> {camp.bookingCount === 1 ? 'booking' : 'bookings'} made
+                            </li>
+                        )}
                         {camp.checkin && camp.checkout && (
                             <li className="list-group-item">
                                 <span className="fw-bold">Check-in:</span> {camp.checkin} <span className="mx-2">|</span> <span className="fw-bold">Check-out:</span> {camp.checkout}
@@ -383,7 +389,7 @@ const Campground = () => {
                                     </p>
                                     <p className="card-text">{review.body}</p>
                                     <p className="card-text text-muted small">
-                                        By: <span className="fw-bold">{review.author.username}</span>
+                                        By: <Link to={`/user/${review.author._id}`} className="fw-bold text-decoration-none">{review.author.username}</Link>
                                     </p>
                                     {currentUser && currentUser.username === review.author.username && (
                                         <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteReview(review._id)}>Delete</button>

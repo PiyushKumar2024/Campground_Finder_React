@@ -8,6 +8,7 @@ import axios from 'axios';
 const BookingCalendar = ({ campgroundId, pricePerNight, currentUser }) => {
     const [selectedRange, setSelectedRange] = useState({ from: undefined, to: undefined });
     const [bookedDates, setBookedDates] = useState([]);
+    const [userBookings, setUserBookings] = useState([]);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
 
@@ -29,9 +30,30 @@ const BookingCalendar = ({ campgroundId, pricePerNight, currentUser }) => {
         fetchBookedDates();
     }, [campgroundId]);
 
+    // Fetch user's bookings for this campground
+    useEffect(() => {
+        const fetchUserBookings = async () => {
+            if (!currentUser) return;
+            try {
+                const token = localStorage.getItem('token');
+                const res = await axios.get(`http://localhost:3000/user/${currentUser.id}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                // Filter to only this campground's active bookings
+                const myBookings = (res.data.bookings || []).filter(
+                    b => b.campground?._id === campgroundId && b.status !== 'cancelled'
+                );
+                setUserBookings(myBookings);
+            } catch (err) {
+                console.error('Failed to fetch user bookings:', err);
+            }
+        };
+        fetchUserBookings();
+    }, [campgroundId, currentUser]);
+
     // Calculate nights and total price
     const calculateBooking = () => {
-        if (!selectedRange.from || !selectedRange.to) return null;
+        if (!selectedRange || !selectedRange.from || !selectedRange.to) return null;
         const nights = Math.ceil((selectedRange.to - selectedRange.from) / (1000 * 60 * 60 * 24));
         const totalPrice = nights * pricePerNight;
         return { nights, totalPrice };
@@ -41,7 +63,7 @@ const BookingCalendar = ({ campgroundId, pricePerNight, currentUser }) => {
 
     // Handle booking submission
     const handleBooking = async () => {
-        if (!selectedRange.from || !selectedRange.to) return;
+        if (!selectedRange || !selectedRange.from || !selectedRange.to) return;
 
         setLoading(true);
         setMessage(null);
@@ -60,13 +82,22 @@ const BookingCalendar = ({ campgroundId, pricePerNight, currentUser }) => {
             setMessage({ type: 'success', text: 'Booking confirmed! Check your profile for details.' });
             setSelectedRange({ from: undefined, to: undefined });
 
-            // Refresh booked dates
+            // Refresh booked dates and user bookings
             const res = await axios.get(`http://localhost:3000/campgrounds/${campgroundId}/bookings`);
             const disabledRanges = res.data.map(booking => ({
                 from: new Date(booking.startDate),
                 to: new Date(booking.endDate)
             }));
             setBookedDates(disabledRanges);
+
+            // Refresh user bookings
+            const userRes = await axios.get(`http://localhost:3000/user/${currentUser.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const myBookings = (userRes.data.bookings || []).filter(
+                b => b.campground?._id === campgroundId && b.status !== 'cancelled'
+            );
+            setUserBookings(myBookings);
         } catch (err) {
             setMessage({
                 type: 'error',
@@ -85,6 +116,21 @@ const BookingCalendar = ({ campgroundId, pricePerNight, currentUser }) => {
 
     return (
         <div className="booking-calendar-container">
+            {/* User's Active Bookings Reminder */}
+            {userBookings.length > 0 && (
+                <div className="alert alert-info mb-3">
+                    <i className="bi bi-info-circle-fill me-2"></i>
+                    <strong>You have {userBookings.length} booking{userBookings.length > 1 ? 's' : ''} here:</strong>
+                    <ul className="mb-0 mt-2">
+                        {userBookings.map(booking => (
+                            <li key={booking._id}>
+                                {new Date(booking.startDate).toLocaleDateString()} - {new Date(booking.endDate).toLocaleDateString()}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
             <h4 className="fw-bold"><i className="bi bi-calendar-check me-2"></i>Book Your Stay</h4>
 
             <DayPicker

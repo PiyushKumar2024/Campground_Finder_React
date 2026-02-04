@@ -199,85 +199,87 @@ const UserProfile = () => {
             )}
 
             {/* My Bookings Section */}
-            {currentUser && currentUser.id === profile._id && profile.bookings && (
-                <div className="row justify-content-center mt-5">
-                    <div className="col-md-10">
-                        <h3 className="text-center mb-4 fw-bold text-secondary">
-                            <i className="bi bi-calendar-check me-2"></i>My Bookings
-                        </h3>
-                        {profile.bookings.length > 0 ? (
-                            <div className="row g-4">
-                                {profile.bookings.map(booking => (
-                                    <div key={booking._id} className="col-md-6 col-lg-4">
-                                        <div className={`card h-100 shadow-sm border-0 ${booking.status === 'cancelled' ? 'opacity-50' : ''}`}>
-                                            {booking.campground && booking.campground.image && booking.campground.image.length > 0 && (
-                                                <img
-                                                    src={booking.campground.image[0].url}
-                                                    className="card-img-top"
-                                                    alt={booking.campground.name}
-                                                    style={{ height: '150px', objectFit: 'cover' }}
-                                                />
-                                            )}
-                                            <div className="card-body">
-                                                <h5 className="card-title fw-bold">
-                                                    {booking.campground ? booking.campground.name : 'Campground'}
-                                                </h5>
-                                                <div className="mb-2">
-                                                    <span className={`badge ${booking.status === 'confirmed' ? 'bg-success' : booking.status === 'cancelled' ? 'bg-danger' : 'bg-warning'}`}>
-                                                        {booking.status}
-                                                    </span>
+            {currentUser && currentUser.id === profile._id && profile.bookings && (() => {
+                const activeBookings = profile.bookings.filter(b => b.status !== 'cancelled');
+                return (
+                    <div className="row justify-content-center mt-5">
+                        <div className="col-md-10">
+                            <h3 className="text-center mb-4 fw-bold text-secondary">
+                                <i className="bi bi-calendar-check me-2"></i>My Bookings
+                            </h3>
+                            {activeBookings.length > 0 ? (
+                                <div className="row g-4">
+                                    {activeBookings.map(booking => (
+                                        <div key={booking._id} className="col-md-6 col-lg-4">
+                                            <div className={`card h-100 shadow-sm border-0 ${booking.status === 'cancelled' ? 'opacity-50' : ''}`}>
+                                                {booking.campground && booking.campground.image && booking.campground.image.length > 0 && (
+                                                    <img
+                                                        src={booking.campground.image[0].url}
+                                                        className="card-img-top"
+                                                        alt={booking.campground.name}
+                                                        style={{ height: '150px', objectFit: 'cover' }}
+                                                    />
+                                                )}
+                                                <div className="card-body">
+                                                    <h5 className="card-title fw-bold">
+                                                        {booking.campground ? booking.campground.name : 'Campground'}
+                                                    </h5>
+                                                    <div className="mb-2">
+                                                        <span className={`badge ${booking.status === 'confirmed' ? 'bg-success' : booking.status === 'cancelled' ? 'bg-danger' : 'bg-warning'}`}>
+                                                            {booking.status}
+                                                        </span>
+                                                    </div>
+                                                    <p className="card-text small mb-1">
+                                                        <i className="bi bi-calendar me-2"></i>
+                                                        {new Date(booking.startDate).toLocaleDateString()} - {new Date(booking.endDate).toLocaleDateString()}
+                                                    </p>
+                                                    <p className="card-text fw-bold text-success mb-2">
+                                                        ${booking.totalPrice}
+                                                    </p>
+                                                    {booking.campground && (
+                                                        <Link to={`/campgrounds/${booking.campground._id}`} className="btn btn-outline-primary btn-sm me-2">
+                                                            View
+                                                        </Link>
+                                                    )}
+                                                    {booking.status !== 'cancelled' && (
+                                                        <button
+                                                            className="btn btn-outline-danger btn-sm"
+                                                            onClick={async () => {
+                                                                try {
+                                                                    const token = localStorage.getItem('token');
+                                                                    await axios.delete(`http://localhost:3000/bookings/${booking._id}`, {
+                                                                        headers: { Authorization: `Bearer ${token}` }
+                                                                    });
+                                                                    // Refresh profile
+                                                                    const res = await axios.get(`http://localhost:3000/user/${id}`, {
+                                                                        headers: { Authorization: `Bearer ${token}` }
+                                                                    });
+                                                                    setProfile(res.data);
+                                                                } catch (e) {
+                                                                    setError('Failed to cancel booking');
+                                                                }
+                                                            }}
+                                                        >
+                                                            Cancel
+                                                        </button>
+                                                    )}
                                                 </div>
-                                                <p className="card-text small mb-1">
-                                                    <i className="bi bi-calendar me-2"></i>
-                                                    {new Date(booking.startDate).toLocaleDateString()} - {new Date(booking.endDate).toLocaleDateString()}
-                                                </p>
-                                                <p className="card-text fw-bold text-success mb-2">
-                                                    ${booking.totalPrice}
-                                                </p>
-                                                {booking.campground && (
-                                                    <Link to={`/campgrounds/${booking.campground._id}`} className="btn btn-outline-primary btn-sm me-2">
-                                                        View
-                                                    </Link>
-                                                )}
-                                                {booking.status !== 'cancelled' && (
-                                                    <button
-                                                        className="btn btn-outline-danger btn-sm"
-                                                        onClick={async () => {
-                                                            try {
-                                                                const token = localStorage.getItem('token');
-                                                                await axios.delete(`http://localhost:3000/bookings/${booking._id}`, {
-                                                                    headers: { Authorization: `Bearer ${token}` }
-                                                                });
-                                                                // Refresh profile
-                                                                const res = await axios.get(`http://localhost:3000/user/${id}`, {
-                                                                    headers: { Authorization: `Bearer ${token}` }
-                                                                });
-                                                                setProfile(res.data);
-                                                            } catch (e) {
-                                                                setError('Failed to cancel booking');
-                                                            }
-                                                        }}
-                                                    >
-                                                        Cancel
-                                                    </button>
-                                                )}
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="text-center text-muted py-4">
-                                <p className="lead">No bookings yet.</p>
-                                <Link to="/campgrounds" className="btn btn-success">Explore Campgrounds</Link>
-                            </div>
-                        )}
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center text-muted py-4">
+                                    <p className="lead">No bookings yet.</p>
+                                    <Link to="/campgrounds" className="btn btn-success">Explore Campgrounds</Link>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
-            )}
+                );
+            })()}
         </div>
     );
 };
 
 export default UserProfile;
-

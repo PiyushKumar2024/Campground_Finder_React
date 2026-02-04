@@ -1,24 +1,247 @@
+/* ========================================
+   CAMPGROUND DETAIL PAGE
+   ======================================== */
+
+/* Review Scrollable Area */
 .vertical-scrollable {
-    max-height: 800px; /* Matches your map height roughly */
-    overflow-y: scroll;
+    max-height: 800px;
+    overflow-y: auto;
     overflow-x: hidden;
-    padding: 10px;
+    padding: 1rem;
+    border-radius: var(--radius-xl);
+    background: var(--neutral-50);
+    border: 1px solid var(--neutral-200);
 }
 
-/* Scoped to vertical-scrollable to avoid breaking other parts of the app */
-.vertical-scrollable .col-sm-8 {
-    color: white;
-    font-size: 24px;
-    padding-bottom: 20px;
-    padding-top: 18px;
+.vertical-scrollable::-webkit-scrollbar {
+    width: 6px;
 }
 
-.vertical-scrollable .col-sm-8:nth-child(2n+1) {
+.vertical-scrollable::-webkit-scrollbar-track {
+    background: var(--neutral-100);
+    border-radius: var(--radius-full);
+}
+
+.vertical-scrollable::-webkit-scrollbar-thumb {
+    background: var(--primary-300);
+    border-radius: var(--radius-full);
+}
+
+/* Review Cards */
+.vertical-scrollable .card {
     background: white;
-    color: black;
+    border: none;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
 }
 
-.vertical-scrollable .col-sm-8:nth-child(2n+2) {
+.vertical-scrollable .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.vertical-scrollable .card-body {
+    padding: 1.5rem;
+}
+
+.vertical-scrollable .card-title {
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--neutral-800);
+    margin-bottom: 0.5rem;
+}
+
+.vertical-scrollable .card-text {
+    color: var(--neutral-600);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Campground Image Carousel */
+.carousel {
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+}
+
+.carousel-item img {
+    aspect-ratio: 16/9;
+    object-fit: cover;
+}
+
+.carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 6px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.carousel-indicators button.active {
+    background-color: white;
+    transform: scale(1.2);
+}
+
+/* Campground Info List */
+.list-group {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid var(--neutral-100);
+    padding: 1rem 1.25rem;
+    transition: background 0.2s ease;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.list-group-item:hover {
+    background: var(--neutral-50);
+}
+
+.list-group-item .fw-bold {
+    color: var(--neutral-800);
+}
+
+/* Price Display */
+.price-display {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-600);
+}
+
+.price-display small {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--neutral-500);
+}
+
+/* Amenity Section */
+.amenity-section {
     background: white;
-    color: black;
+    padding: 1.5rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.5rem;
+}
+
+.amenity-section h6 {
+    font-weight: 600;
+    color: var(--neutral-700);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-100);
+}
+
+.amenity-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin: 0.25rem;
+    border-radius: var(--radius-full);
+    background: var(--neutral-50);
+    font-size: 0.9rem;
+    color: var(--neutral-600);
+    transition: all 0.2s ease;
+}
+
+.amenity-item.active {
+    background: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.amenity-item svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Review Form */
+.review-form-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.review-form-card .card-body {
+    padding: 2rem;
+}
+
+.review-form-card .card-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--neutral-900);
+    margin-bottom: 1.5rem;
+}
+
+.review-form-card textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Map Container */
+.map-container {
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+}
+
+/* Distance Info */
+.distance-info {
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.distance-info i {
+    font-size: 1.25rem;
+    color: var(--primary-500);
+}
+
+.distance-info .distance-value {
+    font-weight: 700;
+    color: var(--primary-600);
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.action-buttons .btn {
+    border-radius: var(--radius-lg);
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .vertical-scrollable {
+        max-height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .amenity-item {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
 }

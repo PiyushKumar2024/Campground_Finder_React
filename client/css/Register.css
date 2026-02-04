@@ -1,3 +1,222 @@
+/* ========================================
+   REGISTER PAGE - PREMIUM AUTH STYLING
+   ======================================== */
+
 body {
-        background-color: #f8f9fa; /* A very light gray, subtle background */
+    background: linear-gradient(135deg, var(--neutral-50) 0%, #ecfdf5 50%, #f0fdf4 100%);
+    min-height: 100vh;
+}
+
+/* Register Card */
+.register-card {
+    background: white;
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+    padding: 2.5rem 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.register-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-400), var(--accent-400), var(--primary-600));
+}
+
+/* Progress Steps */
+.register-steps {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.step-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--neutral-200);
+    transition: all 0.3s ease;
+}
+
+.step-dot.active {
+    background: var(--primary-500);
+    transform: scale(1.2);
+}
+
+.step-dot.completed {
+    background: var(--primary-400);
+}
+
+/* Role Selection Cards */
+.role-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.role-card {
+    background: var(--neutral-50);
+    border: 2px solid var(--neutral-200);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.role-card:hover {
+    border-color: var(--primary-300);
+    transform: translateY(-3px);
+}
+
+.role-card.selected {
+    border-color: var(--primary-500);
+    background: var(--primary-50);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.role-card i {
+    font-size: 2.5rem;
+    color: var(--primary-500);
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.role-card h5 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--neutral-800);
+}
+
+.role-card p {
+    font-size: 0.85rem;
+    color: var(--neutral-500);
+    margin: 0.5rem 0 0;
+}
+
+/* Image Upload Area */
+.image-upload-area {
+    border: 2px dashed var(--neutral-300);
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: var(--neutral-50);
+}
+
+.image-upload-area:hover {
+    border-color: var(--primary-400);
+    background: var(--primary-50);
+}
+
+.image-upload-area i {
+    font-size: 3rem;
+    color: var(--neutral-400);
+    margin-bottom: 1rem;
+}
+
+.image-upload-area p {
+    color: var(--neutral-600);
+    margin: 0;
+}
+
+.image-upload-area .hint {
+    font-size: 0.85rem;
+    color: var(--neutral-400);
+    margin-top: 0.5rem;
+}
+
+/* Preview Image */
+.image-preview {
+    position: relative;
+    display: inline-block;
+}
+
+.image-preview img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--primary-300);
+}
+
+.image-preview .remove-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--error);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Terms Checkbox */
+.terms-check {
+    background: var(--neutral-50);
+    padding: 1rem;
+    border-radius: var(--radius-lg);
+    margin: 1.5rem 0;
+}
+
+.terms-check a {
+    color: var(--primary-600);
+    font-weight: 500;
+}
+
+/* Password Strength */
+.password-strength {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+}
+
+.strength-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--neutral-200);
+    border-radius: var(--radius-full);
+    transition: all 0.3s ease;
+}
+
+.strength-bar.weak {
+    background: var(--error);
+}
+
+.strength-bar.medium {
+    background: var(--warning);
+}
+
+.strength-bar.strong {
+    background: var(--success);
+}
+
+.password-hint {
+    font-size: 0.8rem;
+    color: var(--neutral-500);
+    margin-top: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .register-card {
+        padding: 1.5rem;
     }
+
+    .role-cards {
+        grid-template-columns: 1fr;
+    }
+}

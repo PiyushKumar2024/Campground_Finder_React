@@ -1,111 +1,276 @@
-/* BookingCalendar Styles */
+/* ========================================
+   BOOKING CALENDAR - PREMIUM STYLING
+   ======================================== */
+
+/* Container */
 .booking-calendar-container {
-    background: #fff;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: white;
+    border-radius: var(--radius-2xl);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
     margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.booking-calendar-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-400), var(--primary-600), var(--accent-400));
 }
 
 .booking-calendar-container h4 {
-    margin-bottom: 1rem;
-    color: #333;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--neutral-900);
 }
 
 /* React Day Picker Customization */
 .rdp {
-    --rdp-cell-size: 40px;
-    --rdp-accent-color: #198754;
-    --rdp-background-color: #e8f5e9;
+    --rdp-cell-size: 45px;
+    --rdp-accent-color: var(--primary-500);
+    --rdp-background-color: var(--primary-50);
     margin: 0 auto;
+    font-family: var(--font-primary);
 }
 
-.rdp-day_selected:not([disabled]) {
-    background-color: var(--rdp-accent-color);
+.rdp-month {
+    background: var(--neutral-50);
+    padding: 1rem;
+    border-radius: var(--radius-xl);
+    margin: 0 0.5rem;
+}
+
+.rdp-caption_label {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--neutral-800);
+}
+
+.rdp-nav_button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--neutral-200);
+    color: var(--neutral-600);
+    transition: all 0.2s ease;
+}
+
+.rdp-nav_button:hover {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
     color: white;
 }
 
+.rdp-head_cell {
+    font-weight: 600;
+    color: var(--neutral-500);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.rdp-day {
+    border-radius: var(--radius-lg);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.rdp-day:hover:not(.rdp-day_selected):not(.rdp-day_disabled) {
+    background: var(--primary-100);
+    color: var(--primary-700);
+}
+
+.rdp-day_selected:not([disabled]) {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600)) !important;
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
 .rdp-day_selected:hover:not([disabled]) {
-    background-color: #146c43;
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700)) !important;
 }
 
 .rdp-day_range_middle {
-    background-color: var(--rdp-background-color);
-    color: #333;
+    background: var(--primary-100) !important;
+    color: var(--primary-800);
+    border-radius: 0;
+}
+
+.rdp-day_range_start {
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg) !important;
+}
+
+.rdp-day_range_end {
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0 !important;
 }
 
 .rdp-day_disabled {
-    color: #ccc;
+    color: var(--neutral-300);
     text-decoration: line-through;
+    opacity: 0.5;
+}
+
+.rdp-day_today:not(.rdp-day_selected) {
+    border: 2px solid var(--accent-400);
+    font-weight: 700;
 }
 
 /* Booking Summary */
 .booking-summary {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-top: 1rem;
+    background: linear-gradient(135deg, var(--neutral-50) 0%, var(--primary-50) 100%);
+    border: 1px solid var(--primary-100);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    margin-top: 1.5rem;
 }
 
 .booking-summary .nights {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #333;
+    color: var(--neutral-800);
 }
 
 .booking-summary .total-price {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #198754;
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .booking-summary .price-breakdown {
-    font-size: 0.875rem;
-    color: #6c757d;
+    font-size: 0.9rem;
+    color: var(--neutral-500);
+    margin-top: 0.25rem;
 }
 
 /* Book Now Button */
 .btn-book-now {
     width: 100%;
-    padding: 0.75rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-top: 1rem;
-    background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+    padding: 1rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
     border: none;
-    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: var(--radius-xl);
+    color: white;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-book-now::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-book-now:hover:not(:disabled)::before {
+    left: 100%;
 }
 
 .btn-book-now:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+}
+
+.btn-book-now:active:not(:disabled) {
+    transform: translateY(-1px);
 }
 
 .btn-book-now:disabled {
-    background: #6c757d;
+    background: var(--neutral-300);
     cursor: not-allowed;
+    box-shadow: none;
 }
 
-/* Login prompt */
+/* Login Prompt */
 .login-prompt {
     text-align: center;
-    padding: 1rem;
-    background: #fff3cd;
-    border-radius: 8px;
-    margin-top: 1rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--accent-50), #fff7ed);
+    border: 1px solid var(--accent-200);
+    border-radius: var(--radius-xl);
+    margin-top: 1.5rem;
 }
 
 .login-prompt a {
-    color: #856404;
-    font-weight: 600;
+    color: var(--accent-600);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.login-prompt a:hover {
+    color: var(--accent-700);
+    text-decoration: underline;
+}
+
+/* User Bookings Alert */
+.booking-calendar-container .alert-info {
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    border: 1px solid #93c5fd;
+    border-left: 4px solid var(--info);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+}
+
+.booking-calendar-container .alert-info ul {
+    padding-left: 1.25rem;
+    margin-top: 0.5rem;
+}
+
+.booking-calendar-container .alert-info li {
+    color: #1e40af;
+    font-weight: 500;
 }
 
 /* Responsive */
+@media (max-width: 992px) {
+    .rdp {
+        --rdp-cell-size: 40px;
+    }
+
+    .rdp-month {
+        margin: 0.5rem 0;
+    }
+}
+
 @media (max-width: 768px) {
+    .rdp {
+        --rdp-cell-size: 38px;
+    }
+
+    .booking-calendar-container {
+        padding: 1.5rem;
+    }
+
+    .booking-summary .total-price {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 576px) {
     .rdp {
         --rdp-cell-size: 35px;
     }
-    
+
     .booking-calendar-container {
         padding: 1rem;
     }

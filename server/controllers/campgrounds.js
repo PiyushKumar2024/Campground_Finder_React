@@ -1,5 +1,6 @@
 import catchAsync from '../helper/catchAsync.js';
 import Campground from '../models/campground.js';
+import Booking from '../models/booking.js';
 import { cloudinary } from '../config/cloudinary.js';
 import * as maptilerClient from '@maptiler/client';
 
@@ -91,5 +92,12 @@ export const showOneCampground = catchAsync(async (req, res) => {
     if (!camp) {
         return res.status(404).json({ message: 'The campground does not exist' });
     }
-    res.status(200).json(camp);
+
+    // Count total confirmed bookings for this campground
+    const bookingCount = await Booking.countDocuments({
+        campground: id,
+        status: { $ne: 'cancelled' }
+    });
+
+    res.status(200).json({ ...camp.toObject(), bookingCount });
 })

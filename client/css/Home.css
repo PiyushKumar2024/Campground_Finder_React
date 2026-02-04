@@ -1,51 +1,265 @@
-body {
-        background-color: #fff; /* A clean, bright white background */
+/* ========================================
+   HOME PAGE - CAMPGROUND LISTINGS
+   ======================================== */
+
+/* Hero Section for Campgrounds */
+.hero-section {
+    background:
+        linear-gradient(135deg, rgba(6, 78, 59, 0.8) 0%, rgba(16, 185, 129, 0.6) 100%),
+        url('https://images.unsplash.com/photo-1476041800959-2f6bb412c8ce?q=80&w=2070&auto=format&fit=crop') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 50vh;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    position: relative;
+}
+
+.hero-section h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Campground Cards */
+.card {
+    background: white;
+    border: none;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: var(--shadow-card);
+}
+
+.card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.12),
+        0 0 40px rgba(16, 185, 129, 0.1);
+}
+
+.card-img-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-img-top {
+    height: 220px;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.1);
+}
+
+/* Image Overlay */
+.card-img-overlay-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    color: white;
+    padding: 4rem 1.5rem 1rem;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Price Badge */
+.price-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    z-index: 10;
+}
+
+/* Card Body */
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--neutral-900);
+    margin-bottom: 0.75rem;
+    transition: color 0.3s ease;
+}
+
+.card:hover .card-title {
+    color: var(--primary-600);
+}
+
+.card-text {
+    color: var(--neutral-600);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Location Text */
+.location-text {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--neutral-500);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.location-text i {
+    color: var(--primary-500);
+}
+
+/* Rating Stars */
+.rating-stars {
+    color: var(--accent-400);
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+}
+
+/* View Button */
+.card .btn-outline-success {
+    border-radius: var(--radius-lg);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.card .btn-outline-success:hover {
+    transform: translateX(5px);
+}
+
+/* Section Headers */
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--neutral-900);
+    margin-bottom: 1rem;
+}
+
+.section-header p {
+    color: var(--neutral-600);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Grid Enhancements */
+.row.g-4 {
+    --bs-gutter-y: 2rem;
+}
+
+/* Search/Filter Section */
+.search-section {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    margin: -3rem auto 3rem;
+    position: relative;
+    z-index: 10;
+    max-width: 900px;
+}
+
+.search-section .form-control {
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+}
+
+.search-section .btn {
+    padding: 1rem 2rem;
+    border-radius: var(--radius-lg);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: var(--neutral-300);
+    margin-bottom: 1.5rem;
+}
+
+.empty-state h3 {
+    color: var(--neutral-700);
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: var(--neutral-500);
+    max-width: 400px;
+    margin: 0 auto 2rem;
+}
+
+/* Loading Skeleton */
+.skeleton {
+    background: linear-gradient(90deg, var(--neutral-200) 25%, var(--neutral-100) 50%, var(--neutral-200) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-md);
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
     }
 
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
     .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://images.unsplash.com/photo-1476041800959-2f6bb412c8ce?q=80&w=2070&auto=format&fit=crop') no-repeat center center;
-        background-size: cover;
-        height: 60vh;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
-
-    .hero-section h1, .hero-section p {
-        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-
-    .card {
-        transition: transform .2s ease-in-out, box-shadow .2s ease-in-out;
-        overflow: hidden; /* To contain the zoomed image */
-    }
-    .card:hover {
-        transform: translateY(-5px); /* Lift the card up slightly */
-        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; /* A softer shadow */
-    }
-
-    .card-img-container {
-        position: relative;
+        min-height: 40vh;
+        padding: 2rem 1rem;
     }
 
     .card-img-top {
-        transition: transform 0.3s ease;
+        height: 180px;
     }
 
-    .card:hover .card-img-top {
-        transform: scale(1.05);
+    .search-section {
+        margin: -2rem 1rem 2rem;
+        padding: 1.5rem;
     }
+}
 
-    .card-img-overlay-bottom {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-        color: white;
-        padding: 1.5rem 1rem 0.75rem;
-        font-size: 0.9rem;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+@media (max-width: 576px) {
+    .card:hover {
+        transform: translateY(-8px);
     }
+}
