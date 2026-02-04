@@ -8,25 +8,25 @@ export const user = new Schema({
         required: true,
         unique: true
     },
-    joined:{
-        type:Date,
-        required:true
+    joined: {
+        type: Date,
+        required: true
     },
     geometry: {
         type: pointSchema,
         required: false
     },
-    bio:{
-        type:String,
-        required:true
+    bio: {
+        type: String,
+        required: true
     },
-    phoneNum:{
-        type:String,
-        required:true
+    phoneNum: {
+        type: String,
+        required: true
     },
-    role:{
-        type:String,
-        required:true
+    role: {
+        type: String,
+        required: true
     },
     image: {
         url: String,
@@ -40,6 +40,13 @@ user.virtual('campgrounds', {
     ref: 'Campground',
     localField: '_id',
     foreignField: 'author'
+});
+
+// Virtual for user's bookings
+user.virtual('bookings', {
+    ref: 'Booking',
+    localField: '_id',
+    foreignField: 'user'
 });
 
 //Important: unique:true is an index hint

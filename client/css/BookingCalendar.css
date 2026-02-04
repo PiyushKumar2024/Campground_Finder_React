@@ -1,0 +1,112 @@
+/* BookingCalendar Styles */
+.booking-calendar-container {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.booking-calendar-container h4 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+/* React Day Picker Customization */
+.rdp {
+    --rdp-cell-size: 40px;
+    --rdp-accent-color: #198754;
+    --rdp-background-color: #e8f5e9;
+    margin: 0 auto;
+}
+
+.rdp-day_selected:not([disabled]) {
+    background-color: var(--rdp-accent-color);
+    color: white;
+}
+
+.rdp-day_selected:hover:not([disabled]) {
+    background-color: #146c43;
+}
+
+.rdp-day_range_middle {
+    background-color: var(--rdp-background-color);
+    color: #333;
+}
+
+.rdp-day_disabled {
+    color: #ccc;
+    text-decoration: line-through;
+}
+
+/* Booking Summary */
+.booking-summary {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.booking-summary .nights {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.booking-summary .total-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #198754;
+}
+
+.booking-summary .price-breakdown {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Book Now Button */
+.btn-book-now {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-book-now:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.4);
+}
+
+.btn-book-now:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Login prompt */
+.login-prompt {
+    text-align: center;
+    padding: 1rem;
+    background: #fff3cd;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.login-prompt a {
+    color: #856404;
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .rdp {
+        --rdp-cell-size: 35px;
+    }
+    
+    .booking-calendar-container {
+        padding: 1rem;
+    }
+}

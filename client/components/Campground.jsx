@@ -12,6 +12,7 @@ import * as turf from '@turf/turf';
 import { amenityOptions } from "../config/icons";
 import HostProfile from "./hostprofile";
 import WeatherWidget from "./WeatherWidget";
+import BookingCalendar from "./BookingCalendar";
 
 const MAPTILER_API_KEY = import.meta.env.VITE_MAPTILER_API_KEY;
 config.apiKey = MAPTILER_API_KEY;
@@ -230,7 +231,7 @@ const Campground = () => {
 
             <div className="mb-3">
                 {amenityOptions.map(cat => {
-                    
+
                     return (
                         <div key={cat.name}>
                             <h6>{cat.name}</h6>
@@ -321,6 +322,15 @@ const Campground = () => {
                     )}
                     <div className="mt-3">
                         <HostProfile user={camp.author} camp={camp} />
+                    </div>
+
+                    {/* Booking Calendar */}
+                    <div className="mt-4">
+                        <BookingCalendar
+                            campgroundId={camp._id}
+                            pricePerNight={camp.price}
+                            currentUser={currentUser}
+                        />
                     </div>
                 </div>
             </div>

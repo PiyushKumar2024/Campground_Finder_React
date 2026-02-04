@@ -57,7 +57,12 @@ export const updateUserInfo = catchAsync(async (req, res) => {
 
 export const showUserInfo = catchAsync(async (req, res) => {
     const { id } = req.params;
-    const user = await User.findById(id).populate('campgrounds');
+    const user = await User.findById(id)
+        .populate('campgrounds')
+        .populate({
+            path: 'bookings',
+            populate: { path: 'campground', select: 'name image location' }
+        });
     if (!user) {
         return res.status(404).json({ message: 'User not found' });
     }
