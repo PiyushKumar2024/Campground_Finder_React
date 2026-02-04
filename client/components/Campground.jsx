@@ -220,39 +220,28 @@ const Campground = () => {
     if (error) return <Error err={error} />;
 
     return (
-        <>
-            {/* Map Container */}
-
-            <div className="mt-4">
-                <h2
-                    className="text-center mb-3 text-uppercase fs-1 fw-bold">{camp.name}</h2>
-                <p className="text-center mb-4 mx-8">{camp.description}</p>
+        <div className="container py-5">
+            {/* Header Section */}
+            <div className="mb-4">
+                <h1 className="fw-bold display-5 mb-2">{camp.name}</h1>
+                <div className="d-flex align-items-center gap-3 text-muted">
+                    <span><i className="bi bi-geo-alt-fill text-primary me-1"></i> {camp.location}</span>
+                    <span className="text-muted">|</span>
+                    {camp.reviews.length > 0 ? (
+                        <span className="text-warning">
+                            <i className="bi bi-star-fill me-1"></i>
+                            <span className="text-dark fw-bold">{(camp.reviews.reduce((acc, r) => acc + r.rating, 0) / camp.reviews.length).toFixed(1)}</span>
+                            <span className="text-muted ms-1">({camp.reviews.length} reviews)</span>
+                        </span>
+                    ) : (
+                        <span>No reviews yet</span>
+                    )}
+                </div>
             </div>
 
-            <div className="mb-3">
-                {amenityOptions.map(cat => {
-
-                    return (
-                        <div key={cat.name}>
-                            <h6>{cat.name}</h6>
-                            {cat.amenities.map(element => {
-
-                                const selected = camp.amenity.includes(element.value);
-                                return (
-                                    <div key={element.value} style={{ height: 'fit-content', width: 'fit-content' }}>
-                                        {selected ? element.activeIcon : element.passiveIcon}
-                                        <label htmlFor={element.value} className={selected ? 'text-black' : 'text-gray-400'}>{element.label}</label>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    )
-                })}
-            </div>
-
-            <div className="row p-3">
-
-                <div id="campgroundCarousel" className="carousel slide col-lg-6 p-2" data-bs-ride="carousel">
+            {/* Gallery Section - Carousel */}
+            <div className="mb-5 rounded-4 overflow-hidden shadow-sm position-relative">
+                <div id="campgroundCarousel" className="carousel slide" data-bs-ride="carousel">
                     <div className="carousel-indicators">
                         {camp.image.map((img, index) => (
                             <button
@@ -267,146 +256,211 @@ const Campground = () => {
                         ))}
                     </div>
                     <div className="carousel-inner">
-                        {camp.image.map((img, index) => (
-                            <div key={img.url} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                                <img src={img.url} className="d-block w-100 rounded-5" style={{ aspectRatio: '16/9', objectFit: 'cover' }} alt={`${camp.name} - image ${index + 1}`} />
+                        {camp.image.length > 0 ? (
+                            camp.image.map((img, index) => (
+                                <div key={img.url} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                                    <img src={img.url} className="d-block w-100" style={{ height: '500px', objectFit: 'cover' }} alt={`${camp.name}`} />
+                                </div>
+                            ))
+                        ) : (
+                            <div className="carousel-item active">
+                                <img src="https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg" className="d-block w-100" style={{ height: '500px', objectFit: 'cover' }} alt="Campground" />
                             </div>
-                        ))}
+                        )}
                     </div>
                     {camp.image.length > 1 && (
                         <>
                             <button className="carousel-control-prev" type="button" data-bs-target="#campgroundCarousel" data-bs-slide="prev">
-                                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span className="carousel-control-prev-icon bg-dark rounded-circle p-3 bg-opacity-25" aria-hidden="true"></span>
                                 <span className="visually-hidden">Previous</span>
                             </button>
                             <button className="carousel-control-next" type="button" data-bs-target="#campgroundCarousel" data-bs-slide="next">
-                                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span className="carousel-control-next-icon bg-dark rounded-circle p-3 bg-opacity-25" aria-hidden="true"></span>
                                 <span className="visually-hidden">Next</span>
                             </button>
                         </>
                     )}
                 </div>
-
-                <div className="col-lg-6">
-                    {/* Weather Widget */}
-                    {camp.campLocation && camp.campLocation.coordinates && (
-                        <WeatherWidget lat={camp.campLocation.coordinates[1]} lng={camp.campLocation.coordinates[0]} />
-                    )}
-
-                    <ul className="list-group list-group-flush">
-                        <li className="list-group-item text-muted">{camp.location}</li>
-                        <li className="list-group-item">${camp.price} per night</li>
-                        {camp.bookingCount !== undefined && (
-                            <li className="list-group-item">
-                                <i className="bi bi-calendar-check me-2 text-success"></i>
-                                <span className="fw-bold">{camp.bookingCount}</span> {camp.bookingCount === 1 ? 'booking' : 'bookings'} made
-                            </li>
-                        )}
-                        {camp.checkin && camp.checkout && (
-                            <li className="list-group-item">
-                                <span className="fw-bold">Check-in:</span> {camp.checkin} <span className="mx-2">|</span> <span className="fw-bold">Check-out:</span> {camp.checkout}
-                            </li>
-                        )}
-                        {camp.camprules && camp.camprules.length > 0 && (
-                            <li className="list-group-item">
-                                <div className="fw-bold">Rules</div>
-                                <ul className="list-group list-group-flush">
-                                    {camp.camprules.map((rule, index) => (
-                                        <li key={index} className="list-group-item border-0 py-1 small text-muted">
-                                            <i className="bi bi-pin-angle-fill text-secondary me-2"></i>{rule}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </li>
-                        )}
-                    </ul>
-                    {currentUser && currentUser.username === camp.author.username && (
-                        <div className="card-body">
-                            <Link to={`/campgrounds/edit/${camp._id}`} className="btn btn-info">Edit</Link>
-                            <button className="btn btn-danger" onClick={handleDeleteCamp}>Delete</button>
-                        </div>
-                    )}
-                    <div className="mt-3">
-                        <HostProfile user={camp.author} camp={camp} />
-                    </div>
-
-                    {/* Booking Calendar */}
-                    <div className="mt-4">
-                        <BookingCalendar
-                            campgroundId={camp._id}
-                            pricePerNight={camp.price}
-                            currentUser={currentUser}
-                        />
-                    </div>
-                </div>
             </div>
 
-            <div className="row p-3">
-                <div className="col-lg-6">
-                    <div ref={mapRef} style={{ height: '1000px', marginBottom: '20px', width: '100%', borderRadius: '10px' }}></div>
-                </div>
-                <div className="col-lg-6">
-                    <div className="col-lg-6 m-2">
-                        {userDistance && <li className="list-group-item text-success fw-bold">Your Distance: {userDistance.toFixed(2)} km away</li>}
-                        {clickedDistance && <li className="list-group-item text-primary fw-bold">Selected Distance: {clickedDistance.toFixed(2)} km</li>}
+            <div className="row g-5">
+                {/* Main Content - Left Column */}
+                <div className="col-lg-8">
+                    {/* Description */}
+                    <div className="mb-5">
+                        <h3 className="fw-bold mb-3">About this spot</h3>
+                        <p className="text-secondary fs-5" style={{ lineHeight: '1.8' }}>{camp.description}</p>
                     </div>
-                    {currentUser && (
-                        <div className="card shadow-sm mb-4">
-                            <div className="card-body">
-                                <h4 className="card-title">Leave a Review</h4>
-                                <form onSubmit={handleReviewSubmit} className="needs-validation" noValidate>
-                                    <fieldset className="starability-growRotate">
-                                        <input type="radio" id="no-rate" className="input-no-rate" name="review[rating]" value="1" defaultChecked aria-label="No rating." />
-                                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                                        <label htmlFor="first-rate1" title="Terrible">1 star</label>
-                                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                                        <label htmlFor="first-rate2" title="Not good">2 stars</label>
-                                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                                        <label htmlFor="first-rate3" title="Average">3 stars</label>
-                                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                                        <label htmlFor="first-rate4" title="Very good">4 stars</label>
-                                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                                        <label htmlFor="first-rate5" title="Amazing">5 stars</label>
-                                    </fieldset>
-                                    <div className="mb-3">
-                                        <label className="form-label" htmlFor="review[body]">Review</label>
-                                        <textarea className="form-control" name="review[body]" id="review[body]" rows="3" required></textarea>
-                                        <div className="invalid-feedback">Review text is required.</div>
-                                    </div>
-                                    <button className="btn btn-success">Submit Review</button>
-                                </form>
-                            </div>
-                        </div>
-                    )}
 
-                    <div className="vertical-scrollable">
-                        {camp.reviews.map(review => (
-                            <div className="card mb-3 shadow-sm" key={review._id}>
-                                <div className="card-body">
-                                    <h5 className="card-title">Rating: {review.rating}</h5>
-                                    <p className="starability-result" data-rating={review.rating}>
-                                        Rated: {review.rating} stars
-                                    </p>
-                                    <p className="card-text">{review.body}</p>
-                                    <p className="card-text text-muted small">
-                                        By: <Link to={`/user/${review.author._id}`} className="fw-bold text-decoration-none">{review.author.username}</Link>
-                                    </p>
-                                    {currentUser && currentUser.username === review.author.username && (
-                                        <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteReview(review._id)}>Delete</button>
+                    <hr className="my-5 border-secondary-subtle" />
+
+                    {/* Amenities */}
+                    <div className="mb-5">
+                        <h3 className="fw-bold mb-4">Amenities</h3>
+                        <div className="row row-cols-1 row-cols-md-2 g-3">
+                            {amenityOptions.map(cat => (
+                                <div key={cat.name} className="col">
+                                    <h6 className="fw-bold mb-3 text-uppercase text-muted small ls-1">{cat.name}</h6>
+                                    {cat.amenities.filter(element => camp.amenity.includes(element.value)).length > 0 ? (
+                                        <div className="d-flex flex-wrap gap-2">
+                                            {cat.amenities.filter(element => camp.amenity.includes(element.value)).map(element => (
+                                                <div key={element.value} className="d-flex align-items-center gap-2 px-3 py-2 bg-light rounded-pill border">
+                                                    {element.activeIcon}
+                                                    <span className="fw-medium">{element.label}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-muted fst-italic small">None available</p>
                                     )}
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
 
+                    <hr className="my-5 border-secondary-subtle" />
+
+                    {/* Map */}
+                    <div className="mb-5">
+                        <h3 className="fw-bold mb-3">Where you'll be</h3>
+                        <div ref={mapRef} className="rounded-4 overflow-hidden shadow-sm" style={{ height: '400px', width: '100%' }}></div>
+                        <div className="mt-3 d-flex gap-3">
+                            {userDistance &&
+                                <span className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2">
+                                    <i className="bi bi-cursor-fill me-2"></i>{userDistance.toFixed(1)} km away
+                                </span>
+                            }
+                            {clickedDistance &&
+                                <span className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2">
+                                    <i className="bi bi-geo me-2"></i>Selected: {clickedDistance.toFixed(1)} km
+                                </span>
+                            }
+                        </div>
+                    </div>
+
+                    <hr className="my-5 border-secondary-subtle" />
+
+                    {/* Reviews */}
+                    <div className="mb-5">
+                        <div className="d-flex justify-content-between align-items-center mb-4">
+                            <h3 className="fw-bold m-0">Reviews</h3>
+                            <span className="badge bg-dark rounded-pill px-3 py-2">{camp.reviews.length} reviews</span>
+                        </div>
+
+                        {currentUser && (
+                            <div className="card border-0 bg-light mb-4 rounded-4">
+                                <div className="card-body p-4">
+                                    <h5 className="fw-bold mb-3">Leave a Review</h5>
+                                    <form onSubmit={handleReviewSubmit} className="needs-validation" noValidate>
+                                        <fieldset className="starability-growRotate mb-3">
+                                            <input type="radio" id="no-rate" className="input-no-rate" name="review[rating]" value="1" defaultChecked aria-label="No rating." />
+                                            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                                            <label htmlFor="first-rate1" title="Terrible">1 star</label>
+                                            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                                            <label htmlFor="first-rate2" title="Not good">2 stars</label>
+                                            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                                            <label htmlFor="first-rate3" title="Average">3 stars</label>
+                                            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                                            <label htmlFor="first-rate4" title="Very good">4 stars</label>
+                                            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                                            <label htmlFor="first-rate5" title="Amazing">5 stars</label>
+                                        </fieldset>
+                                        <div className="form-floating mb-3">
+                                            <textarea className="form-control" name="review[body]" id="reviewBody" style={{ height: '100px' }} placeholder="Write your review here..." required></textarea>
+                                            <label htmlFor="reviewBody">Share your experience...</label>
+                                            <div className="invalid-feedback">Review text is required.</div>
+                                        </div>
+                                        <button className="btn btn-dark fw-bold px-4">Post Review</button>
+                                    </form>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="vertical-scrollable p-0 bg-transparent border-0" style={{ maxHeight: 'none', overflow: 'visible' }}>
+                            {camp.reviews.map(review => (
+                                <div className="card border-0 border-bottom mb-4 rounded-0 bg-transparent" key={review._id}>
+                                    <div className="card-body px-0 py-3">
+                                        <div className="d-flex justify-content-between align-items-start mb-2">
+                                            <div className="d-flex align-items-center gap-2">
+                                                <div className="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center fw-bold text-secondary" style={{ width: '40px', height: '40px' }}>
+                                                    {review.author.username[0].toUpperCase()}
+                                                </div>
+                                                <div>
+                                                    <h6 className="fw-bold mb-0">
+                                                        <Link to={`/user/${review.author._id}`} className="text-dark text-decoration-none">{review.author.username}</Link>
+                                                    </h6>
+                                                    <div className="text-warning small">
+                                                        {[...Array(review.rating)].map((_, i) => <i key={i} className="bi bi-star-fill"></i>)}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {currentUser && currentUser.username === review.author.username && (
+                                                <button className="btn btn-sm btn-link text-danger p-0 border-0" onClick={() => handleDeleteReview(review._id)}>
+                                                    <i className="bi bi-trash"></i>
+                                                </button>
+                                            )}
+                                        </div>
+                                        <p className="card-text text-secondary mt-3">{review.body}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
+                {/* Sidebar - Right Column */}
+                <div className="col-lg-4">
+                    <div className="sticky-top" style={{ top: '2rem', zIndex: 10 }}>
+                        {/* Booking Card */}
+                        <div className="card border shadow-lg rounded-4 overflow-hidden mb-4">
+                            <div className="card-body p-4">
+                                <div className="d-flex justify-content-between align-items-baseline mb-4 border-bottom pb-3">
+                                    <h2 className="mb-0 fw-bold">${camp.price} <span className="fs-6 text-muted fw-normal">/ night</span></h2>
+                                    {camp.bookingCount !== undefined && (
+                                        <span className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill">
+                                            {camp.bookingCount} booked
+                                        </span>
+                                    )}
+                                </div>
+
+                                <BookingCalendar
+                                    campgroundId={camp._id}
+                                    pricePerNight={camp.price}
+                                    currentUser={currentUser}
+                                />
+
+                                {camp.checkin && (
+                                    <div className="mt-3 pt-3 border-top d-flex justify-content-between text-muted small">
+                                        <span>Check-in: <span className="fw-bold text-dark">{camp.checkin}</span></span>
+                                        <span>Check-out: <span className="fw-bold text-dark">{camp.checkout}</span></span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Host Profile Card */}
+                        <div className="mb-4">
+                            <HostProfile user={camp.author} camp={camp} />
+                        </div>
+
+                        {/* Edit Controls */}
+                        {currentUser && currentUser.username === camp.author.username && (
+                            <div className="d-grid gap-2">
+                                <Link to={`/campgrounds/edit/${camp._id}`} className="btn btn-outline-dark fw-bold">Edit Campground</Link>
+                                <button className="btn btn-danger fw-bold" onClick={handleDeleteCamp}>Delete Campground</button>
+                            </div>
+                        )}
+
+                        {/* Weather Widget (Mini) */}
+                        {camp.campLocation && camp.campLocation.coordinates && (
+                            <div className="mt-4">
+                                <WeatherWidget lat={camp.campLocation.coordinates[1]} lng={camp.campLocation.coordinates[0]} />
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
-
-
-
-
-        </>
+        </div>
     )
 }
 
