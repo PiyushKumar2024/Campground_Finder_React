@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import {Outlet} from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import { useDispatch } from 'react-redux';
-import { login } from '../redux/featuresRedux/userSlice';
+import { login } from './redux/featuresRedux/userSlice';
 
 function Layout(){
     const dispatch = useDispatch();
