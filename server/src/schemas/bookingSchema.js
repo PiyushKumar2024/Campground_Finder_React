@@ -32,5 +32,16 @@ export const bookingSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    razorpayPaymentId: {
+        type: String
+    },
+    razorpayOrderId: {
+        type: String
+    },
+    paymentStatus: {
+        type: String,
+        enum: ['pending', 'paid', 'failed', 'refunded'],
+        default: 'pending'
     }
 });
