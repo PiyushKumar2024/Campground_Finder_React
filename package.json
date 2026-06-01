@@ -1,7 +1,5 @@
 {
   "dependencies": {
-    "crypto": "^1.0.1",
-    "dotenv": "^17.2.3",
-    "razorpay": "^2.9.6"
+    "dotenv": "^17.2.3"
   }
 }

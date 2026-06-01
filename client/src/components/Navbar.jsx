@@ -20,7 +20,7 @@ const Navbar = () => {
             <div className="container-fluid">
                 <Link to="/" className="navbar-brand fw-bold text-secondary">
                     <i className="bi-compass me-1"></i>
-                    Yelp Camp
+                    Explorion
                 </Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                     aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">

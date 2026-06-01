@@ -1,4 +1,4 @@
-# Campground Finder
+# Explorion
 
 A full-stack, responsive web application designed for outdoor enthusiasts to discover, review, and share their favorite camping spots. Built using the MERN-ish stack (React, Node.js, Express, MongoDB) alongside several powerful third-party integrations, it offers a rich user experience ranging from interactive 3D maps to user-authenticated booking systems.
 
@@ -90,7 +90,7 @@ A full-stack, responsive web application designed for outdoor enthusiasts to dis
 
 ```bash
 git clone <repository-url>
-cd Campground_Finder_React
+cd Explorion
 ```
 
 ### 2. Backend Setup
