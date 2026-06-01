@@ -25,21 +25,21 @@ export const registerUser = catchAsync(async (req, res, next) => {
     }
     //use register for registering 
     const registeredUser = await User.register(user, password);
-    const token = jwt.sign({ id: registeredUser._id, username: registeredUser.username }, process.env.JWT_SECRET || 'fallback-secret-for-dev', { expiresIn: '7d' });
+    const token = jwt.sign({ id: registeredUser._id, username: registeredUser.username }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.status(200).json({ message: 'Successfully Registered', token, user: { id: registeredUser._id, username: registeredUser.username, email: registeredUser.email, image: registeredUser.image } });
 })
 
 export const loginUser = (req, res) => {
     // passport.authenticate('local') has already verified the user and attached it to req.user
     const { _id, username, email, image } = req.user;
-    const token = jwt.sign({ id: _id, username }, process.env.JWT_SECRET || 'fallback-secret-for-dev', { expiresIn: '7d' });
+    const token = jwt.sign({ id: _id, username }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.status(200).json({ message: 'Welcome back', token, user: { id: _id, username, email, image } });
 }
 
 export const updateUserInfo = catchAsync(async (req, res) => {
     console.log(req.body);
     const { id } = req.params;
-    const { joined, ...updateData } = req.body;
+    const { joined, role, ...updateData } = req.body;
     const user = await User.findByIdAndUpdate(id, updateData, { new: true });
     if (!user) return res.status(404).json({ message: 'User not found' });
 

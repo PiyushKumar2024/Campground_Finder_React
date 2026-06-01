@@ -77,7 +77,7 @@ const Login = () => {
                                         <div className="bg-success bg-opacity-10 p-2 rounded-3 me-3">
                                             <i className="bi bi-compass-fill text-success fs-3"></i>
                                         </div>
-                                        <h3 className="fw-bold m-0 text-dark">YelpCamp</h3>
+                                        <h3 className="fw-bold m-0 text-dark">Explorion</h3>
                                     </div>
 
                                     <h4 className="fw-bold mb-3">Login to your account</h4>

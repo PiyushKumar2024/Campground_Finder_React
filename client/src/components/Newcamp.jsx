@@ -165,7 +165,7 @@ const NewCampForm = () => {
                                 <div className="card-body p-4 p-lg-5">
                                     <div className="d-flex align-items-center mb-4">
                                         <i className="bi bi-compass-fill text-success fs-2 me-2"></i>
-                                        <h3 className="fw-bold m-0 text-secondary">YelpCamp</h3>
+                                        <h3 className="fw-bold m-0 text-secondary">Explorion</h3>
                                     </div>
 
                                     <h5 className="mb-4 text-muted">Add a New Campground</h5>

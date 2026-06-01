@@ -41,7 +41,10 @@ mongoose.connect(MONGOURL)
         console.log(err)
     })
 
-app.use(cors());
+app.use(cors({
+    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    credentials: true
+}));
 app.use(express.urlencoded({ extended: true })) //for api works
 app.use(express.json()) //also for parsing reqbody and working with json data
 app.use(passport.initialize());//initi passport and also add its method to req body
@@ -54,10 +57,6 @@ app.use('/campgrounds/:id/reviews', reviewsRoutes)
 app.use('/', authenticationRoutes)
 app.use('/', bookingRoutes)
 
-app.listen(PORT, () => {
-    console.log('listening on port 3000')
-})
-
 //error handling middleware (have an extra err signature) also handles the catchasync
 app.use((err, req, res, next) => {
     //default message and status code
@@ -66,4 +65,8 @@ app.use((err, req, res, next) => {
     console.log(err)
     // Return a JSON response for errors
     res.status(err.status).json({ message: err.message, stack: process.env.NODE_ENV === 'development' ? err.stack : undefined });
+})
+
+app.listen(PORT, () => {
+    console.log(`listening on port ${PORT}`)
 })

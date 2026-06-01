@@ -1,12 +1,17 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-// Define the initial state for this slice.
-// This is the starting point for the 'user' data in the Redux store.
-const initialState={
-    user:{id:null,username:'',email:''},
-    jwtToken: '',
-    isLoggedIn: false
+// Rehydrate state from localStorage to survive page refreshes.
+// Without this, a refresh wipes Redux state but keeps the token in localStorage,
+// causing RequireAuth to pass but all user-dependent components to break (null IDs).
+const storedToken = localStorage.getItem('token');
+const storedUser = localStorage.getItem('user');
+
+const initialState = {
+    user: storedUser ? JSON.parse(storedUser) : { id: null, username: '', email: '' },
+    jwtToken: storedToken || '',
+    isLoggedIn: !!(storedToken && storedUser)
 }
+
 
 // createSlice is a function that accepts an initial state, an object of reducer functions, and a "slice name".
 // It automatically generates action creators and action types that correspond to the reducers and state.

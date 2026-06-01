@@ -54,7 +54,7 @@ const Home = () => {
                 backgroundAttachment: 'fixed'
             }}>
                 <div className="container position-relative z-1">
-                    <h1 className="display-2 fw-bold mb-4 animate-fadeInUp">Welcome to YelpCamp</h1>
+                    <h1 className="display-2 fw-bold mb-4 animate-fadeInUp">Welcome to Explorion</h1>
                     <p className="lead fs-3 mb-5 opacity-90 mx-auto animate-fadeInUp delay-100" style={{ maxWidth: '700px' }}>
                         Discover hand-picked campgrounds from around the world.
                     </p>
@@ -162,7 +162,7 @@ const Home = () => {
                             <div className="accordion-item border-bottom">
                                 <h2 className="accordion-header" id="headingOne">
                                     <button className="accordion-button fs-5 fw-semibold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        Is YelpCamp free to use?
+                                        Is Explorion free to use?
                                     </button>
                                 </h2>
                                 <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">

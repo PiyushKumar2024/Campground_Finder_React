@@ -3,7 +3,13 @@ import User from '../models/user.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const JWTSECRET=process.env.JWT_SECRET || 'thisshouldbeaprodsecret';
+
+if (!process.env.JWT_SECRET) {
+    console.error('CRITICAL ERROR: JWT_SECRET is not defined in .env file. Server cannot start without it.');
+    process.exit(1);
+}
+
+const JWTSECRET = process.env.JWT_SECRET;
 
 
 const options = {
