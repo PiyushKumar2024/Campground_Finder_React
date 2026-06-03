@@ -46,21 +46,18 @@ const Home = () => {
     return (
         <>
             {/* Hero Section */}
-            <div className="hero-section position-relative d-flex align-items-center justify-content-center text-center text-white mb-5" style={{
-                background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80")',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: '85vh',
-                backgroundAttachment: 'fixed'
-            }}>
+            <div className="hero-section mb-5">
                 <div className="container position-relative z-1">
-                    <h1 className="display-2 fw-bold mb-4 animate-fadeInUp">Welcome to Explorion</h1>
-                    <p className="lead fs-3 mb-5 opacity-90 mx-auto animate-fadeInUp delay-100" style={{ maxWidth: '700px' }}>
+                    <div className="badge bg-success bg-opacity-25 text-white mb-3 px-3 py-2 rounded-pill animate-fade-in border border-success border-opacity-50">🌟 Premium Camping Experience</div>
+                    <h1 className="display-2 fw-bold mb-4 animate-fade-in">Welcome to Explorion</h1>
+                    <p className="lead fs-3 mb-5 opacity-90 mx-auto animate-fade-in" style={{ animationDelay: '0.2s', maxWidth: '700px' }}>
                         Discover hand-picked campgrounds from around the world.
                     </p>
-                    <Link to="/campgrounds" className="btn btn-success btn-lg px-5 py-3 fw-semibold rounded-pill shadow-lg animate-fadeInUp delay-200 hover-lift">
-                        Start Exploring
-                    </Link>
+                    <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
+                        <Link to="/campgrounds" className="btn btn-success btn-lg px-5 py-3 fw-semibold rounded-pill shadow-lg hover-glow">
+                            Start Exploring
+                        </Link>
+                    </div>
                 </div>
             </div>
 
@@ -68,50 +65,42 @@ const Home = () => {
                 {/* Features Section */}
                 <div className="row g-4 mb-5 pb-3">
                     <div className="col-md-4">
-                        <div className="card h-100 border-0 shadow-sm text-center p-4 hover-lift">
-                            <div className="mx-auto mb-4 d-flex align-items-center justify-content-center bg-success bg-opacity-10 rounded-circle" style={{ width: '80px', height: '80px' }}>
-                                <i className="bi bi-map text-success fs-1"></i>
-                            </div>
-                            <h3 className="h4 fw-bold mb-3">Explore Nature</h3>
-                            <p className="text-muted mb-0">Find hidden gems and scenic spots curated by our community of outdoor enthusiasts.</p>
+                        <div className="feature-card h-100">
+                            <div className="feature-icon"><i className="bi bi-map"></i></div>
+                            <h4>Explore Nature</h4>
+                            <p>Find hidden gems and scenic spots curated by our community of outdoor enthusiasts.</p>
                         </div>
                     </div>
                     <div className="col-md-4">
-                        <div className="card h-100 border-0 shadow-sm text-center p-4 hover-lift">
-                            <div className="mx-auto mb-4 d-flex align-items-center justify-content-center bg-warning bg-opacity-10 rounded-circle" style={{ width: '80px', height: '80px' }}>
-                                <i className="bi bi-people text-warning fs-1"></i>
-                            </div>
-                            <h3 className="h4 fw-bold mb-3">Community Reviews</h3>
-                            <p className="text-muted mb-0">Read honest reviews from fellow campers to ensure your next trip is perfect.</p>
+                        <div className="feature-card h-100">
+                            <div className="feature-icon"><i className="bi bi-people"></i></div>
+                            <h4>Community Reviews</h4>
+                            <p>Read honest reviews from fellow campers to ensure your next trip is perfect.</p>
                         </div>
                     </div>
                     <div className="col-md-4">
-                        <div className="card h-100 border-0 shadow-sm text-center p-4 hover-lift">
-                            <div className="mx-auto mb-4 d-flex align-items-center justify-content-center bg-info bg-opacity-10 rounded-circle" style={{ width: '80px', height: '80px' }}>
-                                <i className="bi bi-pencil-square text-info fs-1"></i>
-                            </div>
-                            <h3 className="h4 fw-bold mb-3">Share Experiences</h3>
-                            <p className="text-muted mb-0">Create your own campground listings and share your adventures with the world.</p>
+                        <div className="feature-card h-100">
+                            <div className="feature-icon"><i className="bi bi-pencil-square"></i></div>
+                            <h4>Share Experiences</h4>
+                            <p>Create your own campground listings and share your adventures with the world.</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Stats Section */}
-                <div className="card border-0 bg-white shadow-sm mb-5 overflow-hidden">
-                    <div className="card-body p-5">
-                        <div className="row text-center divide-cols-md">
-                            <div className="col-md-4 mb-4 mb-md-0">
-                                <h2 className="display-4 fw-bold text-success mb-1">500+</h2>
-                                <p className="text-secondary fw-medium text-uppercase ls-1">Campgrounds</p>
-                            </div>
-                            <div className="col-md-4 mb-4 mb-md-0 position-relative">
-                                <h2 className="display-4 fw-bold text-warning mb-1">10k+</h2>
-                                <p className="text-secondary fw-medium text-uppercase ls-1">Happy Campers</p>
-                            </div>
-                            <div className="col-md-4">
-                                <h2 className="display-4 fw-bold text-info mb-1">25k+</h2>
-                                <p className="text-secondary fw-medium text-uppercase ls-1">Reviews</p>
-                            </div>
+                <div className="stats-section shadow-sm mb-5">
+                    <div className="row text-center">
+                        <div className="col-md-4 stat-item">
+                            <h2>500+</h2>
+                            <p>Campgrounds</p>
+                        </div>
+                        <div className="col-md-4 stat-item">
+                            <h2>10k+</h2>
+                            <p>Happy Campers</p>
+                        </div>
+                        <div className="col-md-4 stat-item">
+                            <h2>25k+</h2>
+                            <p>Reviews</p>
                         </div>
                     </div>
                 </div>
@@ -200,22 +189,17 @@ const Home = () => {
                 </div>
 
                 {/* Newsletter Section */}
-                <div className="card border-0 bg-dark text-white rounded-4 overflow-hidden mb-5">
-                    <div style={{
-                        background: 'linear-gradient(135deg, var(--primary-800) 0%, var(--primary-900) 100%)',
-                        padding: '4rem 2rem'
-                    }}>
-                        <div className="row justify-content-center text-center">
-                            <div className="col-lg-8">
-                                <h2 className="mb-3 fw-bold">Stay Updated</h2>
-                                <p className="mb-4 text-light opacity-75">Subscribe to our newsletter for the latest campground additions and camping tips.</p>
-                                <div className="row justify-content-center">
-                                    <div className="col-md-9 col-lg-7">
-                                        <form className="d-flex gap-2">
-                                            <input type="email" className="form-control form-control-lg border-0" placeholder="Enter your email" aria-label="Email" />
-                                            <button className="btn btn-warning btn-lg fw-bold" type="button">Subscribe</button>
-                                        </form>
-                                    </div>
+                <div className="newsletter-section mb-5 shadow-lg">
+                    <div className="row justify-content-center text-center position-relative z-1">
+                        <div className="col-lg-8">
+                            <h3 className="mb-3 fw-bold display-6">Stay Updated</h3>
+                            <p className="mb-4 text-light opacity-75 fs-5">Subscribe to our newsletter for the latest campground additions and camping tips.</p>
+                            <div className="row justify-content-center">
+                                <div className="col-md-9 col-lg-7">
+                                    <form className="d-flex gap-2">
+                                        <input type="email" className="form-control form-control-lg" placeholder="Enter your email" aria-label="Email" />
+                                        <button className="btn btn-warning btn-lg fw-bold" type="button">Subscribe</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

@@ -53,69 +53,78 @@ const Home = () => {
         setMap(map);
     }, [data])
 
-    if (isLoading) return <h1>Loading...</h1>;
+    if (isLoading) return (
+        <div className="container py-5 mt-5">
+            <div className="row g-4 mt-5">
+                {[...Array(6)].map((_, i) => (
+                    <div className="col-md-6 col-lg-4" key={i}>
+                        <div className="card h-100 border-0 shadow-sm">
+                            <div className="skeleton" style={{ height: '240px' }}></div>
+                            <div className="card-body p-4">
+                                <div className="skeleton mb-3" style={{ height: '24px', width: '70%' }}></div>
+                                <div className="skeleton mb-4" style={{ height: '16px', width: '40%' }}></div>
+                                <div className="skeleton mb-2" style={{ height: '16px', width: '100%' }}></div>
+                                <div className="skeleton mb-4" style={{ height: '16px', width: '90%' }}></div>
+                                <div className="skeleton mt-auto" style={{ height: '38px', width: '100%', borderRadius: 'var(--radius-lg)' }}></div>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
     if (error) return <Error err={error} />;
 
     return (
         <div className="bg-light min-vh-100 d-flex flex-column">
             {/* Hero Section */}
-            <div className="hero-section position-relative d-flex align-items-center justify-content-center text-center text-white" style={{
-                backgroundImage: 'url("https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80")',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: '60vh'
-            }}>
-                <div className="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
-                <div className="container position-relative z-1">
-                    <h1 className="display-3 fw-bold mb-3">Find Your Next Escape</h1>
-                    <p className="lead fs-4 mb-4 text-light opacity-75 mx-auto" style={{ maxWidth: '700px' }}>
+            <div className="hero-section">
+                <div className="container position-relative z-1 animate-fade-in">
+                    <h1>Find Your Next Escape</h1>
+                    <p className="mb-4">
                         Discover hand-picked campgrounds from around the globe. From lakeside retreats to deep forest hideaways.
                     </p>
-                    <a href="#campgrounds-list" className="btn btn-light btn-lg px-5 fw-semibold rounded-pill shadow-sm">Explore Now</a>
+                    <a href="#campgrounds-list" className="btn btn-success btn-lg px-5 py-3 fw-semibold rounded-pill shadow-lg hover-glow">Explore Now</a>
                 </div>
             </div>
 
-            {/* Map Section */}
-            <div className="container-fluid px-0">
-                <div ref={mapRef} style={{ height: '400px', width: '100%' }}></div>
-            </div>
+
 
             {/* Campgrounds Grid */}
             <div className="container py-5" id="campgrounds-list">
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h2 className="fw-bold text-dark m-0">Featured Destinations</h2>
-                    <Link to="/campgrounds/new" className="btn btn-primary d-flex align-items-center gap-2">
+                <div className="d-flex justify-content-between align-items-center mb-5">
+                    <h2 className="fw-bold text-dark m-0" style={{ fontFamily: 'var(--font-display)' }}>Featured Destinations</h2>
+                    <Link to="/campgrounds/new" className="btn btn-success d-flex align-items-center gap-2 px-4 shadow-sm hover-glow">
                         <i className="bi bi-plus-lg"></i> Add Camp
                     </Link>
                 </div>
 
                 <div className="row g-4">
-                    {data && data.map((camp) => (
-                        <div className="col-md-6 col-lg-4" key={camp._id}>
-                            <div className="card h-100 border-0 shadow-sm hover-lift overflow-hidden">
-                                <div className="position-relative">
+                    {data && data.map((camp, index) => (
+                        <div className="col-md-6 col-lg-4 animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }} key={camp._id}>
+                            <div className="card h-100">
+                                <div className="card-img-container">
                                     <img
                                         src={camp.image.length ? camp.image[0].url : 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg'}
                                         className="card-img-top"
                                         alt={camp.name}
-                                        style={{ height: '240px', objectFit: 'cover' }}
                                     />
-                                    <div className="position-absolute top-0 end-0 m-3">
-                                        <span className="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-bold">
-                                            ${camp.price}<small>/night</small>
-                                        </span>
+                                    <div className="card-img-overlay-bottom d-flex align-items-end">
                                     </div>
+                                    <span className="price-badge">
+                                        ${camp.price}<small className="fw-normal">/night</small>
+                                    </span>
                                 </div>
-                                <div className="card-body d-flex flex-column p-4">
-                                    <h5 className="card-title fw-bold mb-2">{camp.name}</h5>
-                                    <div className="text-muted small mb-3 d-flex align-items-center gap-1">
-                                        <i className="bi bi-geo-alt-fill text-primary"></i>
+                                <div className="card-body d-flex flex-column">
+                                    <h5 className="card-title">{camp.name}</h5>
+                                    <div className="location-text">
+                                        <i className="bi bi-geo-alt-fill"></i>
                                         {camp.location}
                                     </div>
-                                    <p className="card-text text-secondary mb-4 flex-grow-1" style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
+                                    <p className="card-text flex-grow-1">
                                         {camp.description.substring(0, 100)}...
                                     </p>
-                                    <Link to={`/campgrounds/${camp._id}`} className="btn btn-outline-primary w-100 mt-auto fw-medium">
+                                    <Link to={`/campgrounds/${camp._id}`} className="btn btn-outline-success w-100 mt-auto fw-medium">
                                         View Details
                                     </Link>
                                 </div>
@@ -123,6 +132,15 @@ const Home = () => {
                         </div>
                     ))}
                 </div>
+            </div>
+
+            {/* Map Section */}
+            <div className="container mt-5 mb-4 text-center">
+                <h3 className="fw-bold text-dark m-0" style={{ fontFamily: 'var(--font-display)' }}>Explore Destinations on Map</h3>
+                <p className="text-muted mt-2">Find the perfect spot for your next adventure.</p>
+            </div>
+            <div className="container-fluid px-0 mb-5 shadow-sm">
+                <div ref={mapRef} style={{ height: '450px', width: '100%' }}></div>
             </div>
         </div>
     )

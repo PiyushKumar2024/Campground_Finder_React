@@ -32,3 +32,17 @@ main,
         max-width: 1320px;
     }
 }
+
+/* Global Aesthetics */
+html {
+    scroll-behavior: smooth;
+}
+
+::selection {
+    background-color: var(--primary-200);
+    color: var(--primary-900);
+}
+
+#root {
+    animation: fadeIn 0.5s ease-out;
+}

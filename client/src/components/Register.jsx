@@ -1,6 +1,6 @@
 import '../css/Register.css'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { login } from '../redux/featuresRedux/userSlice'
@@ -18,6 +18,7 @@ const Register = () => {
     })
     const [image, setImage] = useState(null);
     const [error, setError] = useState('');//for holding error message from the server
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
 
     const handleSubmit = async (event) => {
@@ -25,6 +26,7 @@ const Register = () => {
         event.preventDefault();
         if (form.checkValidity() === true) {
             try {
+                setIsLoading(true);
                 const data = new FormData();
                 for (const key in formData) {
                     data.append(key, formData[key]);
@@ -40,6 +42,7 @@ const Register = () => {
             } catch (err) {
                 //check how the error obj/json looks
                 setError(err.response?.data?.message || err.message);
+                setIsLoading(false);
             }
         } else {
             event.stopPropagation();
@@ -117,10 +120,14 @@ const Register = () => {
                                             <input type="file" className="form-control bg-light border-0" id="image" name="image" onChange={handleImageChange} accept="image/*" />
                                         </div>
                                         <div className="d-grid mb-4">
-                                            <button className="btn btn-success btn-lg py-3 fw-semibold" type="submit">Create Account</button>
+                                            <button className="btn btn-success btn-lg py-3 fw-semibold" type="submit" disabled={isLoading}>
+                                                {isLoading ? (
+                                                    <><span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Creating Account...</>
+                                                ) : "Create Account"}
+                                            </button>
                                         </div>
                                         <div className="text-center text-muted">
-                                            Already have an account? <a href="/user/login" className="text-success fw-semibold text-decoration-none">Sign In</a>
+                                            Already have an account? <Link to="/user/login" className="text-success fw-semibold text-decoration-none">Sign In</Link>
                                         </div>
                                     </form>
                                 </div>
@@ -134,7 +141,7 @@ const Register = () => {
                                     className="w-100 h-100"
                                     style={{ objectFit: 'cover', position: 'absolute', top: 0, left: 0 }}
                                 />
-                                <div className="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
+                                <div className="position-absolute top-0 start-0 w-100 h-100 animate-gradient" style={{ background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7))' }}></div>
                                 <div className="position-absolute bottom-0 start-0 p-5 text-white">
                                     <h3 className="fw-bold display-6 mb-2">Join the Adventure</h3>
                                     <p className="mb-0 fs-5 opacity-75">Create an account and start sharing your camping experiences.</p>

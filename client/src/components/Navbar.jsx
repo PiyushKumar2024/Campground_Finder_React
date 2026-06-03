@@ -1,12 +1,22 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
 import { logout } from '../redux/featuresRedux/userSlice';
+import { useState, useEffect } from 'react';
 
 const Navbar = () => {
 
     const { isLoggedIn, user } = useSelector((state) => state.user);
     const dispatch=useDispatch();
     const navigate = useNavigate();
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const handleLogout=()=>{
         localStorage.removeItem('token');
@@ -16,7 +26,7 @@ const Navbar = () => {
     }
 
     return (
-        <nav className="navbar sticky-top navbar-expand-md navbar-light bg-white shadow-sm mb-2">
+        <nav className={`navbar sticky-top navbar-expand-md ${scrolled ? 'scrolled' : ''} mb-2`}>
             <div className="container-fluid">
                 <Link to="/" className="navbar-brand fw-bold text-secondary">
                     <i className="bi-compass me-1"></i>

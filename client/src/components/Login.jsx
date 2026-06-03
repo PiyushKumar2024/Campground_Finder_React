@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { login } from '../redux/featuresRedux/userSlice';
@@ -14,6 +14,7 @@ const Login = () => {
         username: '',
         password: ''
     });
+    const [isLoading, setIsLoading] = useState(false);
 
     // Check if there is a 'from' path in the state, otherwise default to /campgrounds
     const from = location.state?.from?.pathname || '/campgrounds';
@@ -25,6 +26,7 @@ const Login = () => {
 
         if (form.checkValidity() === true) {
             try {
+                setIsLoading(true);
                 console.log("Sending request to server..."); // Debug: Check if axios starts
                 const response = await axios.post('http://localhost:3000/user/login', formData);
                 console.log("Server response:", response.data); // Debug: Check success
@@ -37,6 +39,7 @@ const Login = () => {
             } catch (err) {
                 console.error("Login Error:", err); // Debug: Check for errors
                 setError(err.response?.data?.message || err.message);
+                setIsLoading(false);
             }
         } else {
             event.stopPropagation();
@@ -63,7 +66,7 @@ const Login = () => {
                                     className="w-100 h-100"
                                     style={{ objectFit: 'cover', position: 'absolute', top: 0, left: 0 }}
                                 />
-                                <div className="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
+                                <div className="position-absolute top-0 start-0 w-100 h-100 animate-gradient" style={{ background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7))' }}></div>
                                 <div className="position-absolute bottom-0 start-0 p-5 text-white">
                                     <h3 className="fw-bold display-6 mb-2">Welcome Back!</h3>
                                     <p className="mb-0 fs-5 opacity-75">Plan your next escape into nature.</p>
@@ -97,10 +100,14 @@ const Login = () => {
                                             <div className="invalid-feedback">Password is required.</div>
                                         </div>
                                         <div className="d-grid mb-4">
-                                            <button className="btn btn-success btn-lg py-3 fw-semibold" type="submit">Sign In</button>
+                                            <button className="btn btn-success btn-lg py-3 fw-semibold" type="submit" disabled={isLoading}>
+                                                {isLoading ? (
+                                                    <><span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Signing In...</>
+                                                ) : "Sign In"}
+                                            </button>
                                         </div>
                                         <div className="text-center text-muted">
-                                            Don't have an account? <a href="/user/register" className="text-success fw-semibold text-decoration-none">Register</a>
+                                            Don't have an account? <Link to="/user/register" className="text-success fw-semibold text-decoration-none">Register</Link>
                                         </div>
                                     </form>
                                 </div>
