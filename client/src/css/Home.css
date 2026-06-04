@@ -256,6 +256,14 @@
         margin: -2rem 1rem 2rem;
         padding: 1.5rem;
     }
+
+    .map-view-container {
+        height: 450px;
+    }
+
+    .view-toggle {
+        display: none;
+    }
 }
 
 @media (max-width: 576px) {
@@ -263,3 +271,212 @@
         transform: translateY(-8px);
     }
 }
+
+/* ========================================
+   VIEW TOGGLE (Grid / Map)
+   ======================================== */
+.view-toggle {
+    display: flex;
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: white;
+}
+
+.view-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 38px;
+    border: none;
+    background: white;
+    color: var(--neutral-400);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-size: 1rem;
+}
+
+.view-toggle-btn:first-child {
+    border-right: 1px solid var(--neutral-200);
+}
+
+.view-toggle-btn:hover {
+    color: var(--primary-600);
+    background: var(--primary-50);
+}
+
+.view-toggle-btn.active {
+    color: white;
+    background: var(--primary-600);
+}
+
+/* ========================================
+   MAP VIEW
+   ======================================== */
+.map-view-container {
+    position: relative;
+    height: 600px;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--neutral-200);
+}
+
+.map-view-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.map-empty-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(4px);
+    z-index: 10;
+}
+
+.map-empty-overlay i {
+    font-size: 3rem;
+    color: var(--neutral-300);
+    margin-bottom: 0.75rem;
+}
+
+.map-empty-overlay p {
+    color: var(--neutral-500);
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+/* ========================================
+   CUSTOM MAP MARKERS (Airbnb-style price pills)
+   ======================================== */
+.camp-marker {
+    cursor: pointer;
+    z-index: 1;
+    transition: all 0.2s ease;
+}
+
+.camp-marker span {
+    display: block;
+    background: white;
+    color: var(--neutral-900);
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: var(--radius-full);
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(0, 0, 0, 0.04);
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.camp-marker:hover span {
+    background: var(--neutral-900);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+/* ========================================
+   MAP POPUP (Campground preview card)
+   ======================================== */
+.map-popup {
+    width: 250px;
+    font-family: var(--font-primary);
+}
+
+.map-popup img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.map-popup-body {
+    padding: 0.75rem;
+}
+
+.map-popup-body h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--neutral-900);
+    margin: 0 0 0.35rem 0;
+    line-height: 1.3;
+}
+
+.map-popup-location {
+    font-size: 0.78rem;
+    color: var(--neutral-500);
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.map-popup-location i {
+    color: var(--primary-500);
+    font-size: 0.7rem;
+}
+
+.map-popup-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--neutral-100);
+}
+
+.map-popup-price {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--neutral-900);
+}
+
+.map-popup-price small {
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: var(--neutral-500);
+}
+
+.map-popup-link {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--primary-600);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.map-popup-link:hover {
+    color: var(--primary-800);
+    text-decoration: none;
+}
+
+/* Override MapTiler default popup styles */
+.maplibregl-popup-content {
+    padding: 0 !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-xl) !important;
+    overflow: hidden;
+}
+
+.maplibregl-popup-close-button {
+    font-size: 1.2rem;
+    color: white;
+    right: 6px;
+    top: 4px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+.maplibregl-popup-close-button:hover {
+    background: none;
+    color: white;
+}

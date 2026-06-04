@@ -322,20 +322,26 @@ const Campground = () => {
 
                     {/* Map */}
                     <div className="mb-5">
-                        <h3 className="fw-bold mb-3">Where you'll be</h3>
-                        <div ref={mapRef} className="rounded-4 overflow-hidden shadow-sm" style={{ height: '400px', width: '100%' }}></div>
-                        <div className="mt-3 d-flex gap-3">
-                            {userDistance &&
-                                <span className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2">
-                                    <i className="bi bi-cursor-fill me-2"></i>{userDistance.toFixed(1)} km away
-                                </span>
-                            }
-                            {clickedDistance &&
-                                <span className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2">
-                                    <i className="bi bi-geo me-2"></i>Selected: {clickedDistance.toFixed(1)} km
-                                </span>
-                            }
+                        <h3 className="fw-bold mb-1">Where you'll be</h3>
+                        <p className="text-muted mb-3" style={{ fontSize: '0.95rem' }}>{camp.location}</p>
+                        <div className="map-detail-wrapper">
+                            <div ref={mapRef} className="map-detail-canvas"></div>
+                            {(userDistance || clickedDistance) && (
+                                <div className="map-detail-info">
+                                    {userDistance &&
+                                        <span className="map-info-badge">
+                                            <i className="bi bi-cursor-fill"></i>{userDistance.toFixed(1)} km from you
+                                        </span>
+                                    }
+                                    {clickedDistance &&
+                                        <span className="map-info-badge map-info-badge-secondary">
+                                            <i className="bi bi-geo"></i>{clickedDistance.toFixed(1)} km to pin
+                                        </span>
+                                    }
+                                </div>
+                            )}
                         </div>
+                        <p className="text-muted mt-2" style={{ fontSize: '0.8rem' }}><i className="bi bi-info-circle me-1"></i>Click anywhere on the map to measure distance from the campground</p>
                     </div>
 
                     <hr className="my-5 border-secondary-subtle" />

@@ -3,7 +3,7 @@
    ======================================== */
 
 body {
-    background: linear-gradient(135deg, var(--neutral-50) 0%, var(--neutral-100) 50%, var(--neutral-200) 100%);
+    background: linear-gradient(135deg, var(--neutral-50) 0%, var(--primary-50) 50%, var(--secondary-50) 100%);
     min-height: 100vh;
 }
 
@@ -24,7 +24,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--primary-400), var(--accent-400), var(--primary-600));
+    background: linear-gradient(90deg, var(--primary-400), var(--accent-400), var(--secondary-400));
 }
 
 /* Progress Steps */
@@ -78,7 +78,7 @@ body {
 .role-card.selected {
     border-color: var(--primary-500);
     background: var(--primary-50);
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15), var(--shadow-md);
 }
 
 .role-card i {

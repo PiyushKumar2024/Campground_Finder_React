@@ -69,3 +69,6 @@ export const campgrounds=new Schema({
          ref:'Review'
      }]
  })
+
+// Text index for search functionality — enables $text queries across name, location, and description
+campgrounds.index({ name: 'text', location: 'text', description: 'text' });

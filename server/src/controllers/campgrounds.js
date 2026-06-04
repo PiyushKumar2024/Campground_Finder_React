@@ -8,8 +8,55 @@ maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
 //get the data for update camp page from show one camp and use it
 export const loadAllCampground = catchAsync(async (req, res) => {
-    const data = await Campground.find({});
-    res.status(200).json(data);
+    const { search, minPrice, maxPrice, amenities, sort, page = 1, limit = 12 } = req.query;
+
+    // 1. Build filter object dynamically
+    const filter = {};
+
+    if (search) {
+        filter.$text = { $search: search };
+    }
+
+    if (minPrice || maxPrice) {
+        filter.price = {};
+        if (minPrice) filter.price.$gte = Number(minPrice);
+        if (maxPrice) filter.price.$lte = Number(maxPrice);
+    }
+
+    if (amenities) {
+        const amenityList = amenities.split(',');
+        filter.amenity = { $all: amenityList }; // must have ALL selected amenities
+    }
+
+    // 2. Build sort object
+    let sortObj = {};
+    switch (sort) {
+        case 'price_asc':  sortObj = { price: 1 };  break;
+        case 'price_desc': sortObj = { price: -1 }; break;
+        case 'newest':
+        default:           sortObj = { _id: -1 };    break;
+    }
+
+    // 3. Pagination
+    const pageNum = Math.max(1, Number(page));
+    const limitNum = Math.min(50, Math.max(1, Number(limit))); // clamp between 1-50
+    const skip = (pageNum - 1) * limitNum;
+
+    // 4. Execute query + count in parallel
+    const [campgrounds, totalResults] = await Promise.all([
+        Campground.find(filter).sort(sortObj).skip(skip).limit(limitNum),
+        Campground.countDocuments(filter)
+    ]);
+
+    res.status(200).json({
+        campgrounds,
+        pagination: {
+            currentPage: pageNum,
+            totalPages: Math.ceil(totalResults / limitNum),
+            totalResults,
+            limit: limitNum
+        }
+    });
 })
 
 export const createNewCampground = catchAsync(async (req, res) => {
