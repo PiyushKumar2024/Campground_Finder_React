@@ -26,8 +26,14 @@ export const bookingSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'confirmed', 'cancelled'],
-        default: 'confirmed'
+        enum: ['pending', 'paid', 'confirmed', 'completed', 'cancelled'],
+        default: 'pending'
+    },
+    paymentIntentId: {
+        type: String
+    },
+    stripeSessionId: {
+        type: String
     },
     createdAt: {
         type: Date,

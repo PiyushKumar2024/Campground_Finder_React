@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout, login } from '../redux/featuresRedux/userSlice';
+import FavoriteButton from './FavoriteButton';
 
 const UserProfile = () => {
     const { id } = useParams();
@@ -225,9 +226,22 @@ const UserProfile = () => {
                                                         {booking.campground ? booking.campground.name : 'Campground'}
                                                     </h5>
                                                     <div className="mb-2">
-                                                        <span className={`badge ${booking.status === 'confirmed' ? 'bg-success' : booking.status === 'cancelled' ? 'bg-danger' : 'bg-warning'}`}>
-                                                            {booking.status}
+                                                        <span className={`badge ${
+                                                            booking.status === 'paid' ? 'bg-primary' :
+                                                            booking.status === 'confirmed' ? 'bg-success' :
+                                                            booking.status === 'completed' ? 'bg-info' :
+                                                            booking.status === 'cancelled' ? 'bg-danger' :
+                                                            'bg-warning text-dark'
+                                                        }`}>
+                                                            {booking.status === 'paid' && <><i className="bi bi-credit-card me-1"></i>Paid</>}
+                                                            {booking.status === 'confirmed' && <><i className="bi bi-check-circle me-1"></i>Confirmed</>}
+                                                            {booking.status === 'completed' && <><i className="bi bi-check-all me-1"></i>Completed</>}
+                                                            {booking.status === 'pending' && <><i className="bi bi-hourglass-split me-1"></i>Awaiting Payment</>}
+                                                            {booking.status === 'cancelled' && <><i className="bi bi-x-circle me-1"></i>Cancelled</>}
                                                         </span>
+                                                        {booking.status === 'cancelled' && booking.paymentIntentId && (
+                                                            <span className="badge bg-light text-muted border ms-2">Refunded</span>
+                                                        )}
                                                     </div>
                                                     <p className="card-text small mb-1">
                                                         <i className="bi bi-calendar me-2"></i>
@@ -241,10 +255,11 @@ const UserProfile = () => {
                                                             View
                                                         </Link>
                                                     )}
-                                                    {booking.status !== 'cancelled' && (
+                                                    {(booking.status === 'paid' || booking.status === 'confirmed') && (
                                                         <button
                                                             className="btn btn-outline-danger btn-sm"
                                                             onClick={async () => {
+                                                                if (!window.confirm('Cancel this booking? A refund will be issued if payment was made.')) return;
                                                                 try {
                                                                     const token = localStorage.getItem('token');
                                                                     await axios.delete(`http://localhost:3000/bookings/${booking._id}`, {
@@ -260,7 +275,7 @@ const UserProfile = () => {
                                                                 }
                                                             }}
                                                         >
-                                                            Cancel
+                                                            Cancel & Refund
                                                         </button>
                                                     )}
                                                 </div>
@@ -278,6 +293,47 @@ const UserProfile = () => {
                     </div>
                 );
             })()}
+
+            {/* My Wishlist Section */}
+            {currentUser && currentUser.id === profile._id && profile.favorites && (
+                <div className="row justify-content-center mt-5">
+                    <div className="col-md-10">
+                        <h3 className="text-center mb-4 fw-bold text-secondary">
+                            <i className="bi bi-heart-fill text-danger me-2"></i>My Wishlist
+                        </h3>
+                        {profile.favorites.length > 0 ? (
+                            <div className="row g-4">
+                                {profile.favorites.map(camp => (
+                                    <div key={camp._id} className="col-md-6 col-lg-4">
+                                        <div className="card h-100 shadow-sm border-0">
+                                            <div className="position-relative">
+                                                <img
+                                                    src={camp.image && camp.image.length > 0 ? camp.image[0].url : 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg'}
+                                                    className="card-img-top"
+                                                    alt={camp.name}
+                                                    style={{ height: '200px', objectFit: 'cover' }}
+                                                />
+                                                <FavoriteButton campgroundId={camp._id} />
+                                            </div>
+                                            <div className="card-body d-flex flex-column">
+                                                <h5 className="card-title fw-bold">{camp.name}</h5>
+                                                <p className="card-text text-muted text-truncate">{camp.description}</p>
+                                                <p className="card-text fw-bold text-success mb-3">${camp.price} / night</p>
+                                                <Link to={`/campgrounds/${camp._id}`} className="btn btn-outline-success mt-auto w-100">View Campground</Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center text-muted py-4">
+                                <p className="lead">Your wishlist is empty.</p>
+                                <Link to="/campgrounds" className="btn btn-success">Explore Campgrounds</Link>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

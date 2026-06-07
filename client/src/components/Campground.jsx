@@ -13,6 +13,7 @@ import { amenityOptions } from "../config/icons";
 import HostProfile from "./hostprofile";
 import WeatherWidget from "./WeatherWidget";
 import BookingCalendar from "./BookingCalendar";
+import FavoriteButton from "./FavoriteButton";
 
 const MAPTILER_API_KEY = import.meta.env.VITE_MAPTILER_API_KEY;
 config.apiKey = MAPTILER_API_KEY;
@@ -223,7 +224,10 @@ const Campground = () => {
         <div className="container py-5">
             {/* Header Section */}
             <div className="mb-4">
-                <h1 className="fw-bold display-5 mb-2">{camp.name}</h1>
+                <div className="d-flex justify-content-between align-items-center">
+                    <h1 className="fw-bold display-5 mb-2">{camp.name}</h1>
+                    <FavoriteButton campgroundId={camp._id} isAbsolute={false} />
+                </div>
                 <div className="d-flex align-items-center gap-3 text-muted">
                     <span><i className="bi bi-geo-alt-fill text-primary me-1"></i> {camp.location}</span>
                     <span className="text-muted">|</span>

@@ -7,7 +7,7 @@ const storedToken = localStorage.getItem('token');
 const storedUser = localStorage.getItem('user');
 
 const initialState = {
-    user: storedUser ? JSON.parse(storedUser) : { id: null, username: '', email: '' },
+    user: storedUser ? JSON.parse(storedUser) : { id: null, username: '', email: '', favorites: [] },
     jwtToken: storedToken || '',
     isLoggedIn: !!(storedToken && storedUser)
 }
@@ -32,16 +32,22 @@ export const userSlice=createSlice({
         },
         // This reducer handles the logout action.
         logout:(state,action)=>{
-            state.user={id:null,username:'',email:''};
+            state.user={id:null,username:'',email:'', favorites: []};
             state.jwtToken = '';
             state.isLoggedIn = false;
+        },
+        // Reducer to update favorites
+        setFavorites:(state, action) => {
+            if (state.user) {
+                state.user.favorites = action.payload;
+            }
         }
     }
 })
 
 // Export the auto-generated action creators.
 // These can be dispatched from React components (e.g., dispatch(changeUser(userData))).
-export const {login,logout}=userSlice.actions;
+export const {login,logout,setFavorites}=userSlice.actions;
 
 // Export the reducer function itself.
 // This will be imported in the store configuration to handle updates for this slice.

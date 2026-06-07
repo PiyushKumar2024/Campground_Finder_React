@@ -61,7 +61,7 @@ const BookingCalendar = ({ campgroundId, pricePerNight, currentUser }) => {
 
     const bookingDetails = calculateBooking();
 
-    // Handle booking submission
+    // Handle booking submission — now redirects to Stripe Checkout
     const handleBooking = async () => {
         if (!selectedRange || !selectedRange.from || !selectedRange.to) return;
 
@@ -70,7 +70,7 @@ const BookingCalendar = ({ campgroundId, pricePerNight, currentUser }) => {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.post(
+            const res = await axios.post(
                 `http://localhost:3000/campgrounds/${campgroundId}/bookings`,
                 {
                     startDate: selectedRange.from.toISOString(),
@@ -79,31 +79,15 @@ const BookingCalendar = ({ campgroundId, pricePerNight, currentUser }) => {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            setMessage({ type: 'success', text: 'Booking confirmed! Check your profile for details.' });
-            setSelectedRange({ from: undefined, to: undefined });
-
-            // Refresh booked dates and user bookings
-            const res = await axios.get(`http://localhost:3000/campgrounds/${campgroundId}/bookings`);
-            const disabledRanges = res.data.map(booking => ({
-                from: new Date(booking.startDate),
-                to: new Date(booking.endDate)
-            }));
-            setBookedDates(disabledRanges);
-
-            // Refresh user bookings
-            const userRes = await axios.get(`http://localhost:3000/user/${currentUser.id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            const myBookings = (userRes.data.bookings || []).filter(
-                b => b.campground?._id === campgroundId && b.status !== 'cancelled'
-            );
-            setUserBookings(myBookings);
+            // Redirect to Stripe Checkout
+            if (res.data.sessionUrl) {
+                window.location.href = res.data.sessionUrl;
+            }
         } catch (err) {
             setMessage({
                 type: 'error',
                 text: err.response?.data?.message || 'Failed to create booking'
             });
-        } finally {
             setLoading(false);
         }
     };
@@ -170,7 +154,7 @@ const BookingCalendar = ({ campgroundId, pricePerNight, currentUser }) => {
                     onClick={handleBooking}
                     disabled={!bookingDetails || loading}
                 >
-                    {loading ? 'Booking...' : 'Book Now'}
+                    {loading ? 'Redirecting to payment...' : 'Proceed to Payment'}
                 </button>
             ) : (
                 <div className="login-prompt">

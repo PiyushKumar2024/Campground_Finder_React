@@ -5,6 +5,7 @@ import axios from 'axios'
 import Error from './Error'
 import SearchFilterBar from './SearchFilterBar'
 import Pagination from './Pagination'
+import FavoriteButton from './FavoriteButton'
 import { Map, MapStyle, config, Marker, Popup } from '@maptiler/sdk';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
 
@@ -311,6 +312,7 @@ const Home = () => {
                                                     className="card-img-top"
                                                     alt={camp.name}
                                                 />
+                                                <FavoriteButton campgroundId={camp._id} />
                                                 <div className="card-img-overlay-bottom d-flex align-items-end">
                                                 </div>
                                                 <span className="price-badge">

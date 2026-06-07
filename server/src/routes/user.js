@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-import { registerUser, loginUser, showUserInfo, updateUserInfo } from '../controllers/user.js';
+import { registerUser, loginUser, showUserInfo, updateUserInfo, addFavorite, removeFavorite } from '../controllers/user.js';
 import { verifyUser, isLoggedIn, isAccountOwner } from '../middlewares/middleware.js';
 import multer from 'multer';
 import {storage} from '../config/cloudinary.js'
@@ -27,5 +27,8 @@ router.post('/user/login', passport.authenticate('local', { session: false }), l
 router.post('/user/:id', isLoggedIn, isAccountOwner, upload.single('image'), validateUserImage, verifyUser, updateUserInfo);
 
 router.get('/user/:id', isLoggedIn, showUserInfo);
+
+router.post('/user/:id/favorites/:campId', isLoggedIn, isAccountOwner, addFavorite);
+router.delete('/user/:id/favorites/:campId', isLoggedIn, isAccountOwner, removeFavorite);
 
 export default router;

@@ -31,7 +31,11 @@ export const user = new Schema({
     image: {
         url: String,
         imageId: String
-    }
+    },
+    favorites: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Campground'
+    }]
 }, { toJSON: { virtuals: true }, toObject: { virtuals: true } }); //for virtuals 
 
 //look into Campground collection and match the localField of the user collection and foreigh field of 

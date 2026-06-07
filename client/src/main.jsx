@@ -17,6 +17,8 @@ import Campground from './components/Campground.jsx';
 import RequireAuth from './components/RequireAuth.jsx';
 import UpdateCamp from './components/UpdateCamp.jsx';
 import UserProfile from './components/UserProfile.jsx';
+import BookingSuccess from './components/BookingSuccess.jsx';
+import BookingCancel from './components/BookingCancel.jsx';
 import { Provider } from 'react-redux';
 import { store } from './redux/store.js';
 
@@ -69,6 +71,20 @@ const router=createBrowserRouter([
       {
         path:':id',
         element:<RequireAuth><UserProfile/></RequireAuth>
+      }
+    ]
+  },
+  {
+    path:'/booking',
+    element:<Layout/>,
+    children:[
+      {
+        path:'success',
+        element:<RequireAuth><BookingSuccess/></RequireAuth>
+      },
+      {
+        path:'cancel',
+        element:<BookingCancel/>
       }
     ]
   }

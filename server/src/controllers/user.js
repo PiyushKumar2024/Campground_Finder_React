@@ -26,14 +26,14 @@ export const registerUser = catchAsync(async (req, res, next) => {
     //use register for registering 
     const registeredUser = await User.register(user, password);
     const token = jwt.sign({ id: registeredUser._id, username: registeredUser.username }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.status(200).json({ message: 'Successfully Registered', token, user: { id: registeredUser._id, username: registeredUser.username, email: registeredUser.email, image: registeredUser.image } });
+    res.status(200).json({ message: 'Successfully Registered', token, user: { id: registeredUser._id, username: registeredUser.username, email: registeredUser.email, image: registeredUser.image, favorites: registeredUser.favorites } });
 })
 
 export const loginUser = (req, res) => {
     // passport.authenticate('local') has already verified the user and attached it to req.user
-    const { _id, username, email, image } = req.user;
+    const { _id, username, email, image, favorites } = req.user;
     const token = jwt.sign({ id: _id, username }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.status(200).json({ message: 'Welcome back', token, user: { id: _id, username, email, image } });
+    res.status(200).json({ message: 'Welcome back', token, user: { id: _id, username, email, image, favorites } });
 }
 
 export const updateUserInfo = catchAsync(async (req, res) => {
@@ -62,11 +62,35 @@ export const showUserInfo = catchAsync(async (req, res) => {
         .populate({
             path: 'bookings',
             populate: { path: 'campground', select: 'name image location' }
-        });
+        })
+        .populate('favorites');
     if (!user) {
         return res.status(404).json({ message: 'User not found' });
     }
     res.status(200).json(user);
 })
+export const addFavorite = catchAsync(async (req, res) => {
+    const { id, campId } = req.params;
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    
+    if (!user.favorites.includes(campId)) {
+        user.favorites.push(campId);
+        await user.save();
+    }
+    
+    res.status(200).json({ message: 'Added to favorites', favorites: user.favorites });
+});
+
+export const removeFavorite = catchAsync(async (req, res) => {
+    const { id, campId } = req.params;
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    
+    user.favorites = user.favorites.filter(favId => favId.toString() !== campId);
+    await user.save();
+    
+    res.status(200).json({ message: 'Removed from favorites', favorites: user.favorites });
+});
 
 // For JWT, logout is handled on the client side by deleting the token.

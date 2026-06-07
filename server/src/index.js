@@ -6,6 +6,7 @@ import campgroundsRoutes from './routes/campground.js';
 import reviewsRoutes from './routes/reviews.js';
 import authenticationRoutes from './routes/user.js';
 import bookingRoutes from './routes/booking.js';
+import { handleStripeWebhook } from './controllers/bookings.js';
 import dotenv from 'dotenv';
 import passport from 'passport';
 import configureJwtStrategy from './config/passport.js';
@@ -45,6 +46,10 @@ app.use(cors({
     origin: process.env.CLIENT_URL || 'http://localhost:5173',
     credentials: true
 }));
+
+// Stripe webhook needs raw body — must be mounted BEFORE express.json()
+app.post('/webhook/stripe', express.raw({ type: 'application/json' }), handleStripeWebhook);
+
 app.use(express.urlencoded({ extended: true })) //for api works
 app.use(express.json()) //also for parsing reqbody and working with json data
 app.use(passport.initialize());//initi passport and also add its method to req body
