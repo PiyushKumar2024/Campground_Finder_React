@@ -4,7 +4,7 @@ import { storage } from '../config/cloudinary.js'
 import { isLoggedIn, isAuthor, verifyCampgrounds } from '../middlewares/middleware.js';
 import {
     updateCampground, deleteCampground, createNewCampground,
-    loadAllCampground, showOneCampground,
+    loadAllCampground, showOneCampground, loadCampgroundCoordinates
 } from '../controllers/campgrounds.js';
 import { validateImages } from '../middlewares/validateImages.js';
 
@@ -24,6 +24,10 @@ const upload = multer({
 router.route('/')
     .get(loadAllCampground)
     .post(isLoggedIn, upload.array('image'), validateImages, verifyCampgrounds, createNewCampground)
+
+// Important: put /coordinates BEFORE /:id so it doesn't get treated as an ID
+router.route('/coordinates')
+    .get(loadCampgroundCoordinates)
 
 router.route('/:id')
     .patch(isLoggedIn, isAuthor, upload.array('image'), validateImages, verifyCampgrounds, updateCampground)

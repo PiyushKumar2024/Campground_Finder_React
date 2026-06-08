@@ -6,6 +6,8 @@ import campgroundsRoutes from './routes/campground.js';
 import reviewsRoutes from './routes/reviews.js';
 import authenticationRoutes from './routes/user.js';
 import bookingRoutes from './routes/booking.js';
+import tripPlannerRoutes from './routes/tripPlanner.js';
+import placesRoutes from './routes/places.js';
 import { handleStripeWebhook } from './controllers/bookings.js';
 import dotenv from 'dotenv';
 import passport from 'passport';
@@ -61,6 +63,8 @@ app.use('/campgrounds', campgroundsRoutes)
 app.use('/campgrounds/:id/reviews', reviewsRoutes)
 app.use('/', authenticationRoutes)
 app.use('/', bookingRoutes)
+app.use('/api/trip', tripPlannerRoutes)
+app.use('/api/places', placesRoutes)
 
 //error handling middleware (have an extra err signature) also handles the catchasync
 app.use((err, req, res, next) => {

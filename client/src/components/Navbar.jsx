@@ -40,6 +40,11 @@ const Navbar = () => {
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item"><NavLink to="/" className="nav-link" end>Home</NavLink></li>
                         <li className="nav-item"><NavLink to="/campgrounds" className="nav-link" end>Campgrounds</NavLink></li>
+                        <li className="nav-item">
+                            <NavLink to="/trip-planner" className="nav-link text-warning fw-bold">
+                                <i className="bi bi-compass me-1"></i>Trip Planner
+                            </NavLink>
+                        </li>
                         <li className="nav-item"><NavLink to="/campgrounds/new" className="nav-link">New Camp</NavLink></li>
                     </ul>
                     <div className="d-flex align-items-center gap-2">

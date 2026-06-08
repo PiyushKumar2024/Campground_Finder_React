@@ -17,6 +17,8 @@ const Home = () => {
     const [data, setData] = useState(null);
     const [pagination, setPagination] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [touristPlaces, setTouristPlaces] = useState([]);
+    const [isTouristLoading, setIsTouristLoading] = useState(false);
     const [error, setError] = useState(null);
     const [mapView, setMapView] = useState(false);
     const mapRef = useRef(null);
@@ -66,6 +68,17 @@ const Home = () => {
                 .finally(() => {
                     setIsLoading(false);
                 });
+
+            // Also fetch AI tourist places if there's a search term
+            if (filters.search) {
+                setIsTouristLoading(true);
+                axios.get(`http://localhost:3000/api/places/search?q=${filters.search}`)
+                    .then(res => setTouristPlaces(res.data))
+                    .catch(err => console.error("Failed to fetch tourist places:", err))
+                    .finally(() => setIsTouristLoading(false));
+            } else {
+                setTouristPlaces([]);
+            }
         };
 
         debounceRef.current = setTimeout(fetchData, 300);
@@ -139,6 +152,34 @@ const Home = () => {
                             <a href="/campgrounds/${camp._id}" class="map-popup-link">View Details →</a>
                         </div>
                     </div>
+                </div>
+            `);
+
+            const marker = new Marker({ element: el })
+                .setLngLat(coords)
+                .setPopup(popup)
+                .addTo(mapInstance);
+
+            markersRef.current.push(marker);
+        }
+
+        // Add tourist places markers if available
+        for (const place of touristPlaces) {
+            if (!place.campLocation || !place.campLocation.coordinates) continue;
+            
+            const coords = place.campLocation.coordinates;
+            bounds.push(coords);
+
+            const el = document.createElement('div');
+            el.className = 'camp-marker text-white';
+            el.style.background = '#0dcaf0'; // info color
+            el.innerHTML = `<i class="bi bi-star-fill"></i>`;
+
+            const popup = new Popup({ offset: 25, maxWidth: '250px' }).setHTML(`
+                <div class="p-2">
+                    <h6 class="mb-1">${place.name}</h6>
+                    <p class="small text-muted mb-1"><i class="bi bi-geo-alt"></i> ${place.location}</p>
+                    <p class="small mb-0" style="font-size:0.8rem">${place.description}</p>
                 </div>
             `);
 
@@ -279,6 +320,35 @@ const Home = () => {
                 ) : (
                     /* GRID VIEW */
                     <>
+                        {isTouristLoading && (
+                            <div className="mb-4 text-muted small"><span className="spinner-border spinner-border-sm me-2"></span> AI finding popular tourist spots...</div>
+                        )}
+                        {touristPlaces.length > 0 && (
+                            <div className="mb-4 mt-2 p-3 bg-white rounded border shadow-sm" style={{ borderLeft: '4px solid #0dcaf0' }}>
+                                <h6 className="text-info mb-3"><i className="bi bi-stars"></i> Popular Destinations (AI Suggested)</h6>
+                                <div className="d-flex gap-3 overflow-auto pb-2" style={{ scrollbarWidth: 'thin' }}>
+                                    {touristPlaces.map(place => (
+                                        <div key={place._id} className="card flex-shrink-0" style={{ width: '280px' }}>
+                                            {place.image && place.image[0] && (
+                                                <img 
+                                                    src={place.image[0].url} 
+                                                    className="card-img-top" 
+                                                    alt={place.name} 
+                                                    style={{ height: '120px', objectFit: 'cover' }} 
+                                                    onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=800&auto=format&fit=crop'; }}
+                                                />
+                                            )}
+                                            <div className="card-body p-3">
+                                                <h6 className="card-title fw-bold mb-1 text-truncate" title={place.name}>{place.name}</h6>
+                                                <p className="small text-muted mb-2 text-truncate"><i className="bi bi-geo-alt"></i> {place.location}</p>
+                                                <p className="small mb-0 text-muted" style={{ fontSize: '0.8rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{place.description}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        
                         {!isLoading && data && data.length === 0 ? (
                             <div className="no-results">
                                 <div className="no-results-icon">

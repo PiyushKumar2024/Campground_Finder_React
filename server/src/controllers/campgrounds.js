@@ -59,6 +59,16 @@ export const loadAllCampground = catchAsync(async (req, res) => {
     });
 })
 
+// Lightweight endpoint for the Smart Trip Planner picker
+export const loadCampgroundCoordinates = catchAsync(async (req, res) => {
+    // Only return fields needed for the picker and map markers
+    const campgrounds = await Campground.find({})
+        .select('name location campLocation price image')
+        .lean(); // Use lean() for performance since we don't need mongoose document methods here
+
+    res.status(200).json(campgrounds);
+});
+
 export const createNewCampground = catchAsync(async (req, res) => {
     // Check if user is a host or host+camper - campers cannot create campgrounds
     if (req.user.role !== 'host' && req.user.role !== 'host+camper' && req.user.role !== 'admin') {
