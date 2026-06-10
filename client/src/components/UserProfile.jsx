@@ -26,7 +26,7 @@ const UserProfile = () => {
         const fetchUser = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const res = await axios.get(`http://localhost:3000/user/${id}`, {
+                const res = await axios.get(`/user/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setProfile(res.data);
@@ -65,7 +65,7 @@ const UserProfile = () => {
             data.append('role', profile.role);
             if (image) data.append('image', image);
 
-            const res = await axios.post(`http://localhost:3000/user/${id}`, data, {
+            const res = await axios.post(`/user/${id}`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
@@ -262,11 +262,11 @@ const UserProfile = () => {
                                                                 if (!window.confirm('Cancel this booking? A refund will be issued if payment was made.')) return;
                                                                 try {
                                                                     const token = localStorage.getItem('token');
-                                                                    await axios.delete(`http://localhost:3000/bookings/${booking._id}`, {
+                                                                    await axios.delete(`/bookings/${booking._id}`, {
                                                                         headers: { Authorization: `Bearer ${token}` }
                                                                     });
                                                                     // Refresh profile
-                                                                    const res = await axios.get(`http://localhost:3000/user/${id}`, {
+                                                                    const res = await axios.get(`/user/${id}`, {
                                                                         headers: { Authorization: `Bearer ${token}` }
                                                                     });
                                                                     setProfile(res.data);

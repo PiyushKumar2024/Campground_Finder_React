@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/Landing.css';
 
-console.log('hitted the landing page');
+const Landing = () => {
 
-const Home = () => {
     useEffect(() => {
+        document.title = "Explorion | Discover Campgrounds";
+        
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
@@ -111,24 +112,27 @@ const Home = () => {
                     <div id="campgroundCarousel" className="carousel slide shadow-lg rounded-4 overflow-hidden" data-bs-ride="carousel">
                         <div className="carousel-inner">
                             <div className="carousel-item active">
-                                <img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" className="d-block w-100" style={{ height: '500px', objectFit: 'cover' }} alt="Forest Camping" />
-                                <div className="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-3 p-4 mb-4 mx-auto style={{ maxWidth: '600px' }}">
-                                    <h5 className="fs-3 fw-bold">Deep Forest Haven</h5>
-                                    <p className="fs-5 mb-0">Experience the tranquility of the deep woods.</p>
+                                <img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?ixlib=rb-1.2.1&auto=format&fit=crop&w=2400&q=100" className="d-block w-100" style={{ height: '500px', objectFit: 'cover' }} alt="Forest Camping" />
+                                <div className="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-3 p-4 mb-4 mx-auto" style={{ maxWidth: '600px', backdropFilter: 'blur(4px)' }}>
+                                    <h5 className="display-5 fw-bold text-white text-shadow-sm mb-2">Deep Forest Haven</h5>
+                                    <p className="fs-4 mb-0 text-light opacity-100">Experience the tranquility of the deep woods.</p>
+                                    <Link to="/campgrounds" className="btn btn-lg btn-success mt-4 px-5 rounded-pill shadow">Explore Destinations</Link>
                                 </div>
                             </div>
                             <div className="carousel-item">
-                                <img src="https://images.unsplash.com/photo-1492648272180-61e45a8d98a7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" className="d-block w-100" style={{ height: '500px', objectFit: 'cover' }} alt="Mountain View" />
-                                <div className="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-3 p-4 mb-4 mx-auto style={{ maxWidth: '600px' }}">
-                                    <h5 className="fs-3 fw-bold">Mountain Peak Resort</h5>
-                                    <p className="fs-5 mb-0">Breathtaking views from the top of the world.</p>
+                                <img src="https://images.unsplash.com/photo-1533827432537-70133748f5c8?ixlib=rb-1.2.1&auto=format&fit=crop&w=2400&q=100" className="d-block w-100" style={{ height: '500px', objectFit: 'cover' }} alt="Mountain View" />
+                                <div className="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-3 p-4 mb-4 mx-auto" style={{ maxWidth: '600px', backdropFilter: 'blur(4px)' }}>
+                                    <h5 className="display-5 fw-bold text-white text-shadow-sm mb-2">Mountain Peak Resort</h5>
+                                    <p className="fs-4 mb-0 text-light opacity-100">Breathtaking views from the top of the world.</p>
+                                    <Link to="/campgrounds" className="btn btn-lg btn-success mt-4 px-5 rounded-pill shadow">Explore Destinations</Link>
                                 </div>
                             </div>
                             <div className="carousel-item">
-                                <img src="https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" className="d-block w-100" style={{ height: '500px', objectFit: 'cover' }} alt="Lakeside Camping" />
-                                <div className="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-3 p-4 mb-4 mx-auto style={{ maxWidth: '600px' }}">
-                                    <h5 className="fs-3 fw-bold">Lakeside Paradise</h5>
-                                    <p className="fs-5 mb-0">Wake up to the sound of gentle waves.</p>
+                                <img src="https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?ixlib=rb-1.2.1&auto=format&fit=crop&w=2400&q=100" className="d-block w-100" style={{ height: '500px', objectFit: 'cover' }} alt="Lakeside Camping" />
+                                <div className="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-3 p-4 mb-4 mx-auto" style={{ maxWidth: '600px', backdropFilter: 'blur(4px)' }}>
+                                    <h5 className="display-5 fw-bold text-white text-shadow-sm mb-2">Lakeside Paradise</h5>
+                                    <p className="fs-4 mb-0 text-light opacity-100">Wake up to the sound of gentle waves.</p>
+                                    <Link to="/campgrounds" className="btn btn-lg btn-success mt-4 px-5 rounded-pill shadow">Explore Destinations</Link>
                                 </div>
                             </div>
                         </div>
@@ -188,24 +192,6 @@ const Home = () => {
                     </div>
                 </div>
 
-                {/* Newsletter Section */}
-                <div className="newsletter-section mb-5 shadow-lg">
-                    <div className="row justify-content-center text-center position-relative z-1">
-                        <div className="col-lg-8">
-                            <h3 className="mb-3 fw-bold display-6">Stay Updated</h3>
-                            <p className="mb-4 text-light opacity-75 fs-5">Subscribe to our newsletter for the latest campground additions and camping tips.</p>
-                            <div className="row justify-content-center">
-                                <div className="col-md-9 col-lg-7">
-                                    <form className="d-flex gap-2">
-                                        <input type="email" className="form-control form-control-lg" placeholder="Enter your email" aria-label="Email" />
-                                        <button className="btn btn-warning btn-lg fw-bold" type="button">Subscribe</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 {/* Call to Action */}
                 <div className="text-center mb-5">
                     <h3 className="fw-bold mb-3">Ready to start your adventure?</h3>
@@ -220,4 +206,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Landing;

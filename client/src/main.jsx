@@ -22,6 +22,9 @@ import BookingSuccess from './components/BookingSuccess.jsx';
 import BookingCancel from './components/BookingCancel.jsx';
 import { Provider } from 'react-redux';
 import { store } from './redux/store.js';
+import axios from 'axios';
+
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const router=createBrowserRouter([
   {

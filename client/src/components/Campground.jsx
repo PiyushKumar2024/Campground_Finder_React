@@ -1,42 +1,28 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import '../css/StarRating.css';
 import '../css/Campground.css';
 import axios from "axios";
 import Error from "./Error";
 import { useSelector } from "react-redux";
-import { Map, MapStyle, config, Marker, Popup } from '@maptiler/sdk';
-import '@maptiler/sdk/dist/maptiler-sdk.css';
-import * as turf from '@turf/turf';
 import { amenityOptions } from "../config/icons";
 import HostProfile from "./hostprofile";
 import WeatherWidget from "./WeatherWidget";
 import BookingCalendar from "./BookingCalendar";
 import FavoriteButton from "./FavoriteButton";
-
-const MAPTILER_API_KEY = import.meta.env.VITE_MAPTILER_API_KEY;
-config.apiKey = MAPTILER_API_KEY;
+import CampgroundMap from "./CampgroundMap";
+import CampgroundReviews from "./CampgroundReviews";
 
 const Campground = () => {
     const { id } = useParams();
     const [camp, setCamp] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setloading] = useState(true);
-    const [map, setMap] = useState(null);
-    const [userLocation, setUserLocation] = useState(null);
-    const [userDistance, setUserDistance] = useState(null);
-    const [clickedDistance, setClickedDistance] = useState(null);
-    const [clickedLocation, setClickedLocation] = useState(null);
     const { user: currentUser } = useSelector((state) => state.user);
-    const mapRef = useRef(null);
-    const locRef = useRef(null);
-    const clickedMarkerRef = useRef(null);
-    const userMarkerRef = useRef(null);
 
     const navigate = useNavigate();
 
-    //cant use async in use effect
     useEffect(() => {
         if (!id || id === 'undefined') {
             setError({ message: 'Invalid Campground ID', status: 400 });
@@ -44,11 +30,10 @@ const Campground = () => {
             return;
         }
         try {
-            axios.get(`http://localhost:3000/campgrounds/${id}`)
+            axios.get(`/campgrounds/${id}`)
                 .then((response) => {
                     setCamp(response.data);
                     setloading(false);
-
                 })
                 .catch((e) => {
                     setError(e);
@@ -60,160 +45,15 @@ const Campground = () => {
         }
     }, [id])
 
-    console.log(camp);
-
-    useEffect(() => {
-        if (!camp || !camp.campLocation) return;
-        if (camp.campLocation) {
-            const mapInstance = new Map({
-                container: mapRef.current,
-                projection: "globe",
-                style: MapStyle.HYBRID,
-                center: camp.campLocation.coordinates,
-                zoom: 10,
-                pitch: 60,
-                bearing: -17.6,
-                terrainControl: false,
-                scaleControl: true,
-                fullscreenControl: "top-left",
-                terrain: true,
-                terrainExaggeration: 1.5,
-                space: {
-                    preset: "milkyway-bright",
-                }
-            })
-
-            new Marker()
-                .setLngLat(camp.campLocation.coordinates)
-                .setPopup(new Popup().setHTML(`<h6>${camp.name}</h6><p>${camp.location}</p>`))
-                .addTo(mapInstance);
-
-            mapInstance.on('click', (e) => {
-                setClickedLocation([e.lngLat.lng, e.lngLat.lat])
-            });
-
-            // Add the line source and layer once the map is loaded
-            mapInstance.on('load', () => {
-                mapInstance.addSource('route', {
-                    'type': 'geojson',
-                    'data': {
-                        'type': 'Feature',
-                        'properties': {},
-                        'geometry': { 'type': 'LineString', 'coordinates': [] }
-                    }
-                });
-                mapInstance.addLayer({
-                    'id': 'route',
-                    'type': 'line',
-                    'source': 'route',
-                    'layout': { 'line-join': 'round', 'line-cap': 'round' },
-                    'paint': { 'line-color': '#3887be', 'line-width': 5, 'line-dasharray': [2, 2], 'line-opacity': 0.75 }
-                });
-            });
-
-            setMap(mapInstance);
-
-            return () => {
-                mapInstance.remove();
-                setMap(null);
-            };
-        }
-    }, [camp])
-
-    useEffect(() => {
-        if (!map || !navigator.geolocation) return;
-        navigator.geolocation.getCurrentPosition((position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            setUserLocation([longitude, latitude]);
-            if (userMarkerRef.current) {
-                userMarkerRef.current.setLngLat([longitude, latitude]);
-            } else {
-                userMarkerRef.current = new Marker().setLngLat([longitude, latitude]).addTo(map);
-            }
-        }, (error) => {
-            alert('Cannot get your location');
-        });
-    }, [map])
-
-    useEffect(() => {
-        if (camp && camp.campLocation && userLocation) {
-            const from = turf.point(userLocation);
-            const to = turf.point(camp.campLocation.coordinates);
-            const calculatedDistance = turf.distance(from, to, { units: 'kilometers' });
-            setUserDistance(calculatedDistance);
-        }
-    }, [camp, userLocation]);
-
-    useEffect(() => {
-        if (!clickedLocation || !map || !camp) return;
-        const from = turf.point(camp.campLocation.coordinates);
-        const to = turf.point(clickedLocation)
-        const distance = turf.distance(from, to, { units: "kilometers" });
-        setClickedDistance(distance);
-
-        if (clickedMarkerRef.current) {
-            clickedMarkerRef.current.setLngLat(clickedLocation);
-        } else {
-            clickedMarkerRef.current = new Marker({ color: '#FF0000' })
-                .setLngLat(clickedLocation)
-                .addTo(map);
-        }
-
-        const route = map.getSource('route');
-        if (route) {
-            route.setData(turf.lineString([camp.campLocation.coordinates, clickedLocation]));
-        }
-    }, [clickedLocation, map, camp])
-
     const handleDeleteCamp = async () => {
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:3000/campgrounds/${id}`, {
+            await axios.delete(`/campgrounds/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             navigate('/campgrounds');
         } catch (error) {
             setError(error);
-        }
-    }
-
-    const handleDeleteReview = async (rid) => {
-        try {
-            const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:3000/campgrounds/${id}/reviews/${rid}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            const res = await axios.get(`http://localhost:3000/campgrounds/${id}`);
-            setCamp(res.data);
-        } catch (e) {
-            setError(e);
-        }
-    }
-
-    const handleReviewSubmit = async (e) => {
-        e.preventDefault();
-        const form = e.currentTarget;
-        if (form.checkValidity() === false) {//if validity fails
-            e.stopPropagation();//prevent bubbling
-            form.classList.add('was-validated');//adding bs class to show the valid/invalid field styles
-            return;
-        }
-        const rating = form['review[rating]'].value;
-        const body = form['review[body]'].value;
-
-        try {
-            const token = localStorage.getItem('token');
-            await axios.post(`http://localhost:3000/campgrounds/${id}/reviews`,
-                { review: { rating, body } },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            const res = await axios.get(`http://localhost:3000/campgrounds/${id}`);
-            setCamp(res.data);
-            form.reset();
-            form.classList.remove('was-validated');
-        } catch (e) {
-            setError(e);
         }
     }
 
@@ -325,97 +165,18 @@ const Campground = () => {
                     <hr className="my-5 border-secondary-subtle" />
 
                     {/* Map */}
-                    <div className="mb-5">
-                        <h3 className="fw-bold mb-1">Where you'll be</h3>
-                        <p className="text-muted mb-3" style={{ fontSize: '0.95rem' }}>{camp.location}</p>
-                        <div className="map-detail-wrapper">
-                            <div ref={mapRef} className="map-detail-canvas"></div>
-                            {(userDistance || clickedDistance) && (
-                                <div className="map-detail-info">
-                                    {userDistance &&
-                                        <span className="map-info-badge">
-                                            <i className="bi bi-cursor-fill"></i>{userDistance.toFixed(1)} km from you
-                                        </span>
-                                    }
-                                    {clickedDistance &&
-                                        <span className="map-info-badge map-info-badge-secondary">
-                                            <i className="bi bi-geo"></i>{clickedDistance.toFixed(1)} km to pin
-                                        </span>
-                                    }
-                                </div>
-                            )}
-                        </div>
-                        <p className="text-muted mt-2" style={{ fontSize: '0.8rem' }}><i className="bi bi-info-circle me-1"></i>Click anywhere on the map to measure distance from the campground</p>
-                    </div>
+                    <CampgroundMap camp={camp} />
 
                     <hr className="my-5 border-secondary-subtle" />
 
                     {/* Reviews */}
-                    <div className="mb-5">
-                        <div className="d-flex justify-content-between align-items-center mb-4">
-                            <h3 className="fw-bold m-0">Reviews</h3>
-                            <span className="badge bg-dark rounded-pill px-3 py-2">{camp.reviews.length} reviews</span>
-                        </div>
-
-                        {currentUser && (
-                            <div className="card border-0 bg-light mb-4 rounded-4">
-                                <div className="card-body p-4">
-                                    <h5 className="fw-bold mb-3">Leave a Review</h5>
-                                    <form onSubmit={handleReviewSubmit} className="needs-validation" noValidate>
-                                        <fieldset className="starability-growRotate mb-3">
-                                            <input type="radio" id="no-rate" className="input-no-rate" name="review[rating]" value="1" defaultChecked aria-label="No rating." />
-                                            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                                            <label htmlFor="first-rate1" title="Terrible">1 star</label>
-                                            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                                            <label htmlFor="first-rate2" title="Not good">2 stars</label>
-                                            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                                            <label htmlFor="first-rate3" title="Average">3 stars</label>
-                                            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                                            <label htmlFor="first-rate4" title="Very good">4 stars</label>
-                                            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                                            <label htmlFor="first-rate5" title="Amazing">5 stars</label>
-                                        </fieldset>
-                                        <div className="form-floating mb-3">
-                                            <textarea className="form-control" name="review[body]" id="reviewBody" style={{ height: '100px' }} placeholder="Write your review here..." required></textarea>
-                                            <label htmlFor="reviewBody">Share your experience...</label>
-                                            <div className="invalid-feedback">Review text is required.</div>
-                                        </div>
-                                        <button className="btn btn-dark fw-bold px-4">Post Review</button>
-                                    </form>
-                                </div>
-                            </div>
-                        )}
-
-                        <div className="vertical-scrollable p-0 bg-transparent border-0" style={{ maxHeight: 'none', overflow: 'visible' }}>
-                            {camp.reviews.map(review => (
-                                <div className="card border-0 border-bottom mb-4 rounded-0 bg-transparent" key={review._id}>
-                                    <div className="card-body px-0 py-3">
-                                        <div className="d-flex justify-content-between align-items-start mb-2">
-                                            <div className="d-flex align-items-center gap-2">
-                                                <div className="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center fw-bold text-secondary" style={{ width: '40px', height: '40px' }}>
-                                                    {review.author.username[0].toUpperCase()}
-                                                </div>
-                                                <div>
-                                                    <h6 className="fw-bold mb-0">
-                                                        <Link to={`/user/${review.author._id}`} className="text-dark text-decoration-none">{review.author.username}</Link>
-                                                    </h6>
-                                                    <div className="text-warning small">
-                                                        {[...Array(review.rating)].map((_, i) => <i key={i} className="bi bi-star-fill"></i>)}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {currentUser && currentUser.username === review.author.username && (
-                                                <button className="btn btn-sm btn-link text-danger p-0 border-0" onClick={() => handleDeleteReview(review._id)}>
-                                                    <i className="bi bi-trash"></i>
-                                                </button>
-                                            )}
-                                        </div>
-                                        <p className="card-text text-secondary mt-3">{review.body}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    <CampgroundReviews
+                        camp={camp}
+                        setCamp={setCamp}
+                        currentUser={currentUser}
+                        id={id}
+                        setError={setError}
+                    />
                 </div>
 
                 {/* Sidebar - Right Column */}

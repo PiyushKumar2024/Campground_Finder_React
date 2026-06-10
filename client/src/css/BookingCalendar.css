@@ -24,7 +24,7 @@
 }
 
 .booking-calendar-container h4 {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-display);
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
@@ -48,7 +48,7 @@
 }
 
 .rdp-caption_label {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-display);
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--neutral-800);

@@ -11,6 +11,10 @@ A full-stack, responsive web application designed for outdoor enthusiasts to dis
   - Calculates real-time distance using **Turf.js** between your current geolocated position and the campground.
   - Click anywhere on the map to draw a route and measure distance from the campground to the clicked point.
   
+- **AI-Powered Trip Planner & Tourist Search**
+  - Utilizes **Gemini AI** to suggest personalized camping routes and nearby tourist attractions.
+  - Interactive sliding panel allows you to generate, review, and add stops to your itinerary dynamically.
+  
 - **Geocoding & Location Intelligence**
   - When hosts create a campground by typing a location string (e.g., "Yosemite, CA"), the backend automatically translates this into exact GeoJSON coordinates using MapTiler's Forward Geocoding API.
   
@@ -110,6 +114,7 @@ CLOUDINARY_KEY=<your_cloudinary_api_key>
 CLOUDINARY_SECRET=<your_cloudinary_api_secret>
 JWT_SECRET=<your_jwt_secret>
 MAPTILER_API_KEY=<your_maptiler_api_key>
+GEMINI_API_KEY=<your_gemini_api_key>
 ```
 
 Start the backend server:
@@ -132,6 +137,7 @@ Create a `.env` file in the `/client` directory:
 
 ```env
 VITE_MAPTILER_API_KEY=<your_maptiler_api_key>
+VITE_API_URL=http://localhost:3000
 ```
 
 Start the Vite development server:

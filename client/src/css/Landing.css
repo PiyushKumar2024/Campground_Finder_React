@@ -5,7 +5,7 @@
 /* Hero Section */
 .hero-section {
     background:
-        linear-gradient(135deg, rgba(6, 78, 59, 0.85) 0%, rgba(15, 23, 42, 0.7) 50%, rgba(79, 70, 229, 0.6) 100%),
+        linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(15, 23, 42, 0.6) 50%, rgba(30, 41, 59, 0.7) 100%),
         url('https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
     background-size: cover;
     background-position: center;
@@ -39,7 +39,7 @@
 }
 
 .hero-section h1 {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-display);
     font-size: clamp(2.5rem, 6vw, 4.5rem);
     font-weight: 700;
     color: white;
@@ -95,7 +95,7 @@
 }
 
 .feature-card h4 {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-display);
     font-weight: 600;
     color: var(--neutral-900);
     margin-bottom: 1rem;
@@ -158,7 +158,7 @@
 
 .testimonial-card::before {
     content: '"';
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-display);
     font-size: 8rem;
     color: var(--primary-100);
     position: absolute;
@@ -177,11 +177,12 @@
 
 /* Stats Section */
 .stats-section {
-    background: linear-gradient(135deg, var(--primary-50) 0%, var(--accent-50) 50%, var(--secondary-50) 100%);
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
     padding: 5rem 0;
     border-radius: var(--radius-2xl);
     margin: 3rem 0;
-    border: 1px solid var(--primary-100);
+    border: 1px solid var(--neutral-200);
+    box-shadow: var(--shadow-md);
 }
 
 .stat-item {
@@ -192,10 +193,7 @@
 .stat-item h2 {
     font-size: 3.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--primary-600);
     margin-bottom: 0.5rem;
 }
 
@@ -232,7 +230,7 @@
 
 .newsletter-section h3 {
     color: white;
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-display);
 }
 
 .newsletter-section .form-control {

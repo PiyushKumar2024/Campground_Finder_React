@@ -20,6 +20,11 @@ const Home = () => {
     const [touristPlaces, setTouristPlaces] = useState([]);
     const [isTouristLoading, setIsTouristLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    useEffect(() => {
+        document.title = "Explorion | All Campgrounds";
+    }, []);
+
     const [mapView, setMapView] = useState(false);
     const mapRef = useRef(null);
     const mapInstanceRef = useRef(null);
@@ -57,7 +62,7 @@ const Home = () => {
             const queryString = buildQueryString(filters);
             setSearchParams(queryString ? new URLSearchParams(queryString) : {}, { replace: true });
 
-            axios.get(`http://localhost:3000/campgrounds${queryString ? '?' + queryString : ''}`)
+            axios.get(`/campgrounds${queryString ? '?' + queryString : ''}`)
                 .then(response => {
                     setData(response.data.campgrounds);
                     setPagination(response.data.pagination);
@@ -72,7 +77,7 @@ const Home = () => {
             // Also fetch AI tourist places if there's a search term
             if (filters.search) {
                 setIsTouristLoading(true);
-                axios.get(`http://localhost:3000/api/places/search?q=${filters.search}`)
+                axios.get(`/api/places/search?q=${filters.search}`)
                     .then(res => setTouristPlaces(res.data))
                     .catch(err => console.error("Failed to fetch tourist places:", err))
                     .finally(() => setIsTouristLoading(false));
@@ -245,7 +250,7 @@ const Home = () => {
     return (
         <div className="bg-light min-vh-100 d-flex flex-column">
             {/* Hero Section */}
-            <div className="hero-section">
+            <div className="home-hero">
                 <div className="container position-relative z-1 animate-fade-in">
                     <h1>Find Your Next Escape</h1>
                     <p className="mb-4">
@@ -323,7 +328,7 @@ const Home = () => {
                         {isTouristLoading && (
                             <div className="mb-4 text-muted small"><span className="spinner-border spinner-border-sm me-2"></span> AI finding popular tourist spots...</div>
                         )}
-                        {touristPlaces.length > 0 && (
+                        {Array.isArray(touristPlaces) && touristPlaces.length > 0 && (
                             <div className="mb-4 mt-2 p-3 bg-white rounded border shadow-sm" style={{ borderLeft: '4px solid #0dcaf0' }}>
                                 <h6 className="text-info mb-3"><i className="bi bi-stars"></i> Popular Destinations (AI Suggested)</h6>
                                 <div className="d-flex gap-3 overflow-auto pb-2" style={{ scrollbarWidth: 'thin' }}>
