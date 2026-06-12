@@ -64,5 +64,3 @@ export const validateImages = async (req, res, next) => {
         next(error);
     }
 };
-
-};
