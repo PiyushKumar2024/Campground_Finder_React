@@ -30,7 +30,7 @@ const UpdateCamp = () => {
     const [isUpdating, setIsUpdating] = useState(false);
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/campgrounds/${id}`)
+        axios.get(`/campgrounds/${id}`)
             .then(res => {
                 setFormData({
                     name: res.data.name,
@@ -145,7 +145,7 @@ const UpdateCamp = () => {
                 }
             }
 
-            await axios.patch(`http://localhost:3000/campgrounds/${id}`, data, {
+            await axios.patch(`/campgrounds/${id}`, data, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             navigate(`/campgrounds/${id}`);

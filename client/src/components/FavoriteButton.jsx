@@ -25,7 +25,7 @@ const FavoriteButton = ({ campgroundId, isAbsolute = true }) => {
         try {
             const token = localStorage.getItem('token');
             if (isFavorited) {
-                const res = await axios.delete(`http://localhost:3000/user/${user.id}/favorites/${campgroundId}`, {
+                const res = await axios.delete(`/user/${user.id}/favorites/${campgroundId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 dispatch(setFavorites(res.data.favorites));
@@ -34,7 +34,7 @@ const FavoriteButton = ({ campgroundId, isAbsolute = true }) => {
                 storedUser.favorites = res.data.favorites;
                 localStorage.setItem('user', JSON.stringify(storedUser));
             } else {
-                const res = await axios.post(`http://localhost:3000/user/${user.id}/favorites/${campgroundId}`, {}, {
+                const res = await axios.post(`/user/${user.id}/favorites/${campgroundId}`, {}, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 dispatch(setFavorites(res.data.favorites));

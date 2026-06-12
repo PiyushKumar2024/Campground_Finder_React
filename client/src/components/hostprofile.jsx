@@ -11,7 +11,7 @@ const HostProfile = ({ user, camp }) => {
             try {
                 const token = localStorage.getItem('token');
                 if (token && user?._id) {
-                    const res = await axios.get(`http://localhost:3000/user/${user._id}`, {
+                    const res = await axios.get(`/user/${user._id}`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     setHost(res.data);

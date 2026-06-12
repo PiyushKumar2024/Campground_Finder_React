@@ -66,7 +66,7 @@ const NewCampForm = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post('http://localhost:3000/campgrounds', data, {
+            const response = await axios.post('/campgrounds', data, {
                 headers: { Authorization: `Bearer ${token}` },
                 //timeout for the request
                 timeout: 30000,

@@ -16,7 +16,7 @@ const BookingCalendar = ({ campgroundId, pricePerNight, currentUser }) => {
     useEffect(() => {
         const fetchBookedDates = async () => {
             try {
-                const res = await axios.get(`http://localhost:3000/campgrounds/${campgroundId}/bookings`);
+                const res = await axios.get(`/campgrounds/${campgroundId}/bookings`);
                 // Convert bookings to disabled date ranges
                 const disabledRanges = res.data.map(booking => ({
                     from: new Date(booking.startDate),
@@ -36,7 +36,7 @@ const BookingCalendar = ({ campgroundId, pricePerNight, currentUser }) => {
             if (!currentUser) return;
             try {
                 const token = localStorage.getItem('token');
-                const res = await axios.get(`http://localhost:3000/user/${currentUser.id}`, {
+                const res = await axios.get(`/user/${currentUser.id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 // Filter to only this campground's active bookings
@@ -71,7 +71,7 @@ const BookingCalendar = ({ campgroundId, pricePerNight, currentUser }) => {
         try {
             const token = localStorage.getItem('token');
             const res = await axios.post(
-                `http://localhost:3000/campgrounds/${campgroundId}/bookings`,
+                `/campgrounds/${campgroundId}/bookings`,
                 {
                     startDate: selectedRange.from.toISOString(),
                     endDate: selectedRange.to.toISOString()

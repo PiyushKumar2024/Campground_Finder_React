@@ -33,7 +33,7 @@ const Login = () => {
             try {
                 setIsLoading(true);
                 console.log("Sending request to server..."); // Debug: Check if axios starts
-                const response = await axios.post('http://localhost:3000/user/login', formData);
+                const response = await axios.post('/user/login', formData);
                 console.log("Server response:", response.data); // Debug: Check success
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('user', JSON.stringify(response.data.user));

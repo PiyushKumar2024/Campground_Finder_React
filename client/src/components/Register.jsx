@@ -39,7 +39,7 @@ const Register = () => {
                 if (image) {
                     data.append('image', image);
                 }
-                const response = await axios.post('http://localhost:3000/user/register', data);
+                const response = await axios.post('/user/register', data);
                 localStorage.setItem('token', response.data.token); // Keep token for auth
                 localStorage.setItem('user', JSON.stringify(response.data.user)); // Store only the user object
                 dispatch(login(response.data));

@@ -20,7 +20,7 @@ const BookingSuccess = () => {
 
             try {
                 const token = localStorage.getItem('token');
-                const res = await axios.get(`http://localhost:3000/bookings/verify/${sessionId}`, {
+                const res = await axios.get(`/bookings/verify/${sessionId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setBooking(res.data.booking);
