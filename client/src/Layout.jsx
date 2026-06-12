@@ -1,3 +1,8 @@
+/**
+ * @file Layout.jsx
+ * @description Main Layout component wrapping all routes.
+ * Restores user session from localStorage on app load and displays Navbar/Footer.
+ */
 import React, { useEffect } from "react";
 import {Outlet} from 'react-router-dom';
 import Navbar from './components/Navbar';

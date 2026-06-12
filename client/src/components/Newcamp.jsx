@@ -1,3 +1,8 @@
+/**
+ * @file Newcamp.jsx
+ * @description Form component for creating a new campground.
+ * Handles multipart/form-data for uploading campground details alongside up to 5 images.
+ */
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";

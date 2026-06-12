@@ -1,3 +1,9 @@
+/**
+ * @file UserProfile.jsx
+ * @description User profile component.
+ * Displays user info, hosted campgrounds, active bookings, and wishlist.
+ * Allows the account owner to edit their profile details.
+ */
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';

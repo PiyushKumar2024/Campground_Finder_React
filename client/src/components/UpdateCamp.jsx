@@ -1,3 +1,8 @@
+/**
+ * @file UpdateCamp.jsx
+ * @description Form component for updating an existing campground.
+ * Pre-fills existing data and allows users to append new images or select existing images for deletion.
+ */
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";

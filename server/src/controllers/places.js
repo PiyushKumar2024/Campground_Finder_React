@@ -1,6 +1,16 @@
+/**
+ * @file places.js
+ * @description Controller for the AI-powered Tourist Places Search feature.
+ * Integrates with Google's Gemini AI to find popular tourist destinations based on a search query.
+ */
 import { GoogleGenAI } from '@google/genai';
 import catchAsync from '../helper/catchAsync.js';
 
+/**
+ * Search for tourist places using Gemini AI
+ * @route GET /api/places/search
+ * @query {string} q - The search query (e.g., "beaches in California")
+ */
 export const searchPlaces = catchAsync(async (req, res) => {
     const { q } = req.query;
     if (!q) return res.status(400).json({ message: 'Search query required' });
@@ -32,11 +42,21 @@ Instructions:
     const config = { responseMimeType: 'application/json' };
 
     try {
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: prompt,
-            config,
-        });
+        let response;
+        try {
+            response = await ai.models.generateContent({
+                model: "gemini-2.5-flash",
+                contents: prompt,
+                config,
+            });
+        } catch (err) {
+            console.warn("Primary model gemini-2.5-flash failed, falling back to gemini-1.5-flash:", err.message);
+            response = await ai.models.generateContent({
+                model: "gemini-1.5-flash",
+                contents: prompt,
+                config,
+            });
+        }
 
         let rawText = response.text;
         

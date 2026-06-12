@@ -1,3 +1,7 @@
+/**
+ * @file booking.js
+ * @description Express routes for managing bookings and Stripe checkout sessions.
+ */
 import express from 'express';
 import { isLoggedIn } from '../middlewares/middleware.js';
 import { createBooking, getBookingsForCampground, cancelBooking, handleStripeWebhook, verifyCheckoutSession } from '../controllers/bookings.js';
@@ -8,16 +12,31 @@ const router = express.Router({ mergeParams: true });
 // This route is here for reference; actual mounting happens in index.js
 // router.post('/webhook/stripe', express.raw({ type: 'application/json' }), handleStripeWebhook);
 
-// Get bookings for a campground (for calendar)
+/**
+ * @route GET /campgrounds/:id/bookings
+ * @description Fetch active future bookings for a campground (used by calendar)
+ */
 router.get('/campgrounds/:id/bookings', getBookingsForCampground);
 
-// Create a booking (requires login) — now creates a Stripe Checkout Session
+/**
+ * @route POST /campgrounds/:id/bookings
+ * @description Create a new booking and initialize a Stripe checkout session
+ * @access Protected (Requires Login)
+ */
 router.post('/campgrounds/:id/bookings', isLoggedIn, createBooking);
 
-// Verify a checkout session (for the success page)
+/**
+ * @route GET /bookings/verify/:sessionId
+ * @description Verify a Stripe checkout session and update booking status
+ * @access Protected (Requires Login)
+ */
 router.get('/bookings/verify/:sessionId', isLoggedIn, verifyCheckoutSession);
 
-// Cancel a booking (requires login) — now issues a Stripe refund
+/**
+ * @route DELETE /bookings/:bookingId
+ * @description Cancel a booking and issue a Stripe refund
+ * @access Protected (Requires Login)
+ */
 router.delete('/bookings/:bookingId', isLoggedIn, cancelBooking);
 
 export default router;

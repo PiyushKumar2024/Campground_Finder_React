@@ -1,3 +1,7 @@
+/**
+ * @file bookingSchema.js
+ * @description Mongoose schema definition for Campground Bookings.
+ */
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 

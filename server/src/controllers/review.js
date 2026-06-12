@@ -1,7 +1,15 @@
+/**
+ * @file review.js
+ * @description Controllers for adding and deleting campground reviews.
+ */
 import catchAsync from '../helper/catchAsync.js'
 import Campground from '../models/campground.js'
 import Review from '../models/review.js'
 
+/**
+ * Create a new review for a specific campground
+ * @route POST /campgrounds/:id/reviews
+ */
 export const createReview=catchAsync(async(req,res)=>{
     const campground=await Campground.findById(req.params.id);
     if(!campground) return res.status(404).json({message:'Campground not found'});
@@ -14,6 +22,10 @@ export const createReview=catchAsync(async(req,res)=>{
     res.status(201).json({message:'Successfully added review', review});
 })
 
+/**
+ * Delete a review from a campground
+ * @route DELETE /campgrounds/:id/reviews/:reviewId
+ */
 export const deleteReview=catchAsync(async(req,res)=>{
     const {id,reviewId}=req.params;
     const camp=await Campground.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});

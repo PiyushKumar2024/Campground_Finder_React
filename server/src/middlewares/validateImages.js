@@ -1,5 +1,16 @@
+/**
+ * @file validateImages.js
+ * @description Middleware to validate the number of uploaded campground images.
+ * Since Multer uploads files *before* we can validate the req.body, this middleware
+ * cleans up excess uploaded files from Cloudinary if the total count exceeds the maximum.
+ */
 import Campground from '../models/campground.js';
+import { cloudinary } from '../config/cloudinary.js';
 
+/**
+ * Validates that a campground has no more than 5 images after creation/update.
+ * Removes excess uploaded images from Cloudinary if validation fails.
+ */
 export const validateImages = async (req, res, next) => {
     const maxImages = 5;
     // req.files is populated by Multer (files are already on Cloudinary at this point)
@@ -54,6 +65,4 @@ export const validateImages = async (req, res, next) => {
     }
 };
 
-//In a standard JSON request, you can validate the data before doing anything else. 
-// However, when handling file uploads with multipart/form-data (which is what your form sends), 
-// Express cannot read req.body or req.files until the multer middleware runs.
+};

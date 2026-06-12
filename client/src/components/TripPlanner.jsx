@@ -1,3 +1,9 @@
+/**
+ * @file TripPlanner.jsx
+ * @description AI-Powered Trip Planner.
+ * Allows users to search for destinations, build an itinerary via drag-and-drop,
+ * and fetch AI-generated insights via the Gemini API.
+ */
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';

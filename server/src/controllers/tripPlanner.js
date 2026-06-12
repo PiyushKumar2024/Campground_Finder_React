@@ -1,7 +1,18 @@
+/**
+ * @file tripPlanner.js
+ * @description Controller for the AI Smart Trip Planner.
+ * Uses Google Gemini AI (with Google Search tools) to generate comprehensive trip itineraries,
+ * including travel options, distances, and nearby attractions.
+ */
 import { GoogleGenAI } from '@google/genai';
 import catchAsync from '../helper/catchAsync.js';
 
-// Get AI Insights for Trip Planner
+/**
+ * Generate AI insights for a multi-stop road trip
+ * @route POST /api/trip/insights
+ * @body {Object} origin - The user's starting location
+ * @body {Array} stops - Array of campground stops along the route
+ */
 export const getTripInsights = catchAsync(async (req, res) => {
     const { origin, stops } = req.body;
 
@@ -91,11 +102,21 @@ Instructions:
     };
 
     try {
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash", // Use 2.5 flash as 3.5 might not be generally available or has different naming
-            contents: prompt,
-            config,
-        });
+        let response;
+        try {
+            response = await ai.models.generateContent({
+                model: "gemini-2.5-flash",
+                contents: prompt,
+                config,
+            });
+        } catch (err) {
+            console.warn("Primary model gemini-2.5-flash failed, falling back to gemini-1.5-flash:", err.message);
+            response = await ai.models.generateContent({
+                model: "gemini-1.5-flash",
+                contents: prompt,
+                config,
+            });
+        }
 
         // Parse the JSON response
         // Sometimes the model adds conversational text before or after the JSON.

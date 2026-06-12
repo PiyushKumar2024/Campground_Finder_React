@@ -1,3 +1,8 @@
+/**
+ * @file Error.jsx
+ * @description Global error display component.
+ * Renders HTTP status codes and error messages when exceptions occur.
+ */
 const Error = ({ err }) => {
     return (
         <>

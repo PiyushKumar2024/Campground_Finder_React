@@ -1,3 +1,8 @@
+/**
+ * @file Navbar.jsx
+ * @description Main navigation bar component.
+ * Displays routing links, handles scroll effects, and manages user authentication state (login/logout).
+ */
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
 import { logout } from '../redux/featuresRedux/userSlice';

@@ -1,3 +1,8 @@
+/**
+ * @file Login.jsx
+ * @description User login component.
+ * Authenticates users and stores JWT tokens in localStorage for persistence.
+ */
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import axios from 'axios';

@@ -1,3 +1,7 @@
+/**
+ * @file bookings.js
+ * @description Controllers for managing campground reservations and processing payments via Stripe.
+ */
 import catchAsync from '../helper/catchAsync.js';
 import Booking from '../models/booking.js';
 import Campground from '../models/campground.js';
@@ -8,7 +12,12 @@ dotenv.config();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Create a new booking + Stripe Checkout Session
+/**
+ * Create a new pending booking and initialize a Stripe Checkout Session
+ * @route POST /campgrounds/:id/book
+ * @body {string} startDate - The check-in date
+ * @body {string} endDate - The check-out date
+ */
 export const createBooking = catchAsync(async (req, res) => {
     const { id } = req.params;
     const { startDate, endDate } = req.body;
@@ -107,7 +116,11 @@ export const createBooking = catchAsync(async (req, res) => {
     });
 });
 
-// Stripe Webhook Handler
+/**
+ * Stripe Webhook Handler
+ * Processes async payment confirmations and expirations from Stripe
+ * @route POST /webhook/stripe
+ */
 export const handleStripeWebhook = async (req, res) => {
     const sig = req.headers['stripe-signature'];
     let event;
@@ -163,7 +176,10 @@ export const handleStripeWebhook = async (req, res) => {
     res.json({ received: true });
 };
 
-// Verify a checkout session (for the success page)
+/**
+ * Verify a checkout session and update booking status (used by success page)
+ * @route GET /booking/verify/:sessionId
+ */
 export const verifyCheckoutSession = catchAsync(async (req, res) => {
     const { sessionId } = req.params;
 
@@ -197,7 +213,10 @@ export const verifyCheckoutSession = catchAsync(async (req, res) => {
     });
 });
 
-// Get all bookings for a campground (for calendar display)
+/**
+ * Fetch all active future bookings for a specific campground (used for disabling calendar dates)
+ * @route GET /campgrounds/:id/bookings
+ */
 export const getBookingsForCampground = catchAsync(async (req, res) => {
     const { id } = req.params;
 
@@ -210,7 +229,10 @@ export const getBookingsForCampground = catchAsync(async (req, res) => {
     res.status(200).json(bookings);
 });
 
-// Cancel a booking (with Stripe refund)
+/**
+ * Cancel a booking and issue a refund via Stripe if applicable
+ * @route POST /bookings/:bookingId/cancel
+ */
 export const cancelBooking = catchAsync(async (req, res) => {
     const { bookingId } = req.params;
 

@@ -1,5 +1,14 @@
+/**
+ * @file validateUserImage.js
+ * @description Middleware for managing user avatar uploads.
+ * Attaches a cleanup function to the request so subsequent validation middlewares
+ * can delete the uploaded image from Cloudinary if their validation fails.
+ */
 import { cloudinary } from '../config/cloudinary.js';
 
+/**
+ * Creates and attaches a Cloudinary cleanup function to the request object.
+ */
 export const validateUserImage = async (req, res, next) => {
     // req.file is populated by Multer (file is already on Cloudinary at this point)
     const file = req.file;

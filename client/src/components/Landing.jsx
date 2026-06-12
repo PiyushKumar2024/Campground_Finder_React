@@ -92,15 +92,15 @@ const Landing = () => {
                 <div className="stats-section shadow-sm mb-5">
                     <div className="row text-center">
                         <div className="col-md-4 stat-item">
-                            <h2>500+</h2>
+                            <h2>45+</h2>
                             <p>Campgrounds</p>
                         </div>
                         <div className="col-md-4 stat-item">
-                            <h2>10k+</h2>
+                            <h2>120+</h2>
                             <p>Happy Campers</p>
                         </div>
                         <div className="col-md-4 stat-item">
-                            <h2>25k+</h2>
+                            <h2>350+</h2>
                             <p>Reviews</p>
                         </div>
                     </div>

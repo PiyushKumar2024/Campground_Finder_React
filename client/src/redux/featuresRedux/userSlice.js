@@ -1,3 +1,7 @@
+/**
+ * @file userSlice.js
+ * @description Redux slice for managing user state (authentication, profile info, favorites).
+ */
 import {createSlice} from '@reduxjs/toolkit';
 
 // Rehydrate state from localStorage to survive page refreshes.

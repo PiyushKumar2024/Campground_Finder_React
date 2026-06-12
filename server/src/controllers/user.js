@@ -1,3 +1,7 @@
+/**
+ * @file user.js
+ * @description Controllers for user authentication, registration, profile management, and favorites.
+ */
 import catchAsync from '../helper/catchAsync.js';
 import User from '../models/user.js';
 import '../models/campground.js';
@@ -7,6 +11,10 @@ import { cloudinary } from '../config/cloudinary.js';
 
 dotenv.config();
 
+/**
+ * Register a new user
+ * @route POST /register
+ */
 export const registerUser = catchAsync(async (req, res, next) => {
     const { password, ...userData } = req.body;
 
@@ -29,6 +37,10 @@ export const registerUser = catchAsync(async (req, res, next) => {
     res.status(200).json({ message: 'Successfully Registered', token, user: { id: registeredUser._id, username: registeredUser.username, email: registeredUser.email, image: registeredUser.image, favorites: registeredUser.favorites } });
 })
 
+/**
+ * Login an existing user and return a JWT
+ * @route POST /login
+ */
 export const loginUser = (req, res) => {
     // passport.authenticate('local') has already verified the user and attached it to req.user
     const { _id, username, email, image, favorites } = req.user;
@@ -36,8 +48,11 @@ export const loginUser = (req, res) => {
     res.status(200).json({ message: 'Welcome back', token, user: { id: _id, username, email, image, favorites } });
 }
 
+/**
+ * Update user profile information and/or avatar
+ * @route PUT /user/:id
+ */
 export const updateUserInfo = catchAsync(async (req, res) => {
-    console.log(req.body);
     const { id } = req.params;
     const { joined, role, ...updateData } = req.body;
     const user = await User.findByIdAndUpdate(id, updateData, { new: true });
@@ -55,6 +70,10 @@ export const updateUserInfo = catchAsync(async (req, res) => {
     res.status(200).json({ message: 'User updated successfully', user });
 })
 
+/**
+ * Fetch complete user profile including their campgrounds, bookings, and favorites
+ * @route GET /user/:id
+ */
 export const showUserInfo = catchAsync(async (req, res) => {
     const { id } = req.params;
     const user = await User.findById(id)
@@ -69,6 +88,10 @@ export const showUserInfo = catchAsync(async (req, res) => {
     }
     res.status(200).json(user);
 })
+/**
+ * Add a campground to user's favorites
+ * @route POST /user/:id/favorites/:campId
+ */
 export const addFavorite = catchAsync(async (req, res) => {
     const { id, campId } = req.params;
     const user = await User.findById(id);
@@ -82,6 +105,10 @@ export const addFavorite = catchAsync(async (req, res) => {
     res.status(200).json({ message: 'Added to favorites', favorites: user.favorites });
 });
 
+/**
+ * Remove a campground from user's favorites
+ * @route DELETE /user/:id/favorites/:campId
+ */
 export const removeFavorite = catchAsync(async (req, res) => {
     const { id, campId } = req.params;
     const user = await User.findById(id);

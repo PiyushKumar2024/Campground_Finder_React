@@ -1,3 +1,7 @@
+/**
+ * @file userSchema.js
+ * @description Mongoose schema definition for Users.
+ */
 import mongoose from 'mongoose';
 import { pointSchema } from './pointSchema.js';
 const Schema = mongoose.Schema;

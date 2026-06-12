@@ -1,3 +1,8 @@
+/**
+ * @file Campground.jsx
+ * @description Campground detail view.
+ * Displays comprehensive campground info, image carousel, amenities, map, and review section.
+ */
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";

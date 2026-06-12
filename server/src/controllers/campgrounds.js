@@ -1,3 +1,7 @@
+/**
+ * @file campgrounds.js
+ * @description Controllers for campground CRUD operations, search/filtering, and MapTiler geocoding.
+ */
 import catchAsync from '../helper/catchAsync.js';
 import Campground from '../models/campground.js';
 import Booking from '../models/booking.js';
@@ -6,7 +10,16 @@ import * as maptilerClient from '@maptiler/client';
 
 maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
-//get the data for update camp page from show one camp and use it
+/**
+ * Fetch a paginated, filtered, and sorted list of campgrounds
+ * @route GET /campgrounds
+ * @query {string} search - Text search query
+ * @query {number} minPrice - Minimum price filter
+ * @query {number} maxPrice - Maximum price filter
+ * @query {string} amenities - Comma-separated list of required amenities
+ * @query {string} sort - Sort order (price_asc, price_desc, newest)
+ * @query {number} page - Page number
+ */
 export const loadAllCampground = catchAsync(async (req, res) => {
     const { search, minPrice, maxPrice, amenities, sort, page = 1, limit = 12 } = req.query;
 
@@ -59,7 +72,10 @@ export const loadAllCampground = catchAsync(async (req, res) => {
     });
 })
 
-// Lightweight endpoint for the Smart Trip Planner picker
+/**
+ * Fetch lightweight campground coordinates for the Smart Trip Planner map
+ * @route GET /api/trip/campgrounds
+ */
 export const loadCampgroundCoordinates = catchAsync(async (req, res) => {
     // Only return fields needed for the picker and map markers
     const campgrounds = await Campground.find({})
@@ -69,6 +85,11 @@ export const loadCampgroundCoordinates = catchAsync(async (req, res) => {
     res.status(200).json(campgrounds);
 });
 
+/**
+ * Create a new campground (Hosts & Admins only)
+ * Includes MapTiler forward geocoding to convert location string to GeoJSON coordinates
+ * @route POST /campgrounds
+ */
 export const createNewCampground = catchAsync(async (req, res) => {
     // Check if user is a host or host+camper - campers cannot create campgrounds
     if (req.user.role !== 'host' && req.user.role !== 'host+camper' && req.user.role !== 'admin') {
@@ -92,6 +113,11 @@ export const createNewCampground = catchAsync(async (req, res) => {
     res.status(201).json({ message: 'The campground is successfully created', _id: camp._id });
 })
 
+/**
+ * Update an existing campground
+ * Handles partial updates, new image uploads, and deletion of existing images via Cloudinary
+ * @route PUT /campgrounds/:id
+ */
 export const updateCampground = catchAsync(async (req, res) => {
     const { id } = req.params;
     if (req.body.location) {
@@ -119,12 +145,16 @@ export const updateCampground = catchAsync(async (req, res) => {
         await camp.updateOne({ $pull: { image: { imageId: { $in: deleteImages } } } });
         // Update the camp object in memory so the response reflects the deletion
         camp.image = camp.image.filter(img => !deleteImages.includes(img.imageId));
-        console.log(camp);
     }
     if (!camp) return res.status(404).json({ message: 'Campground not found' });
     res.status(200).json({ message: 'The campground is successfully updated', camp });
 })
 
+/**
+ * Delete a campground
+ * Note: Cloudinary image deletion and associated review deletion are handled via Mongoose middleware
+ * @route DELETE /campgrounds/:id
+ */
 export const deleteCampground = catchAsync(async (req, res) => {
     const { id } = req.params;
     const deletedCamp = await Campground.findByIdAndDelete(id);
@@ -133,6 +163,10 @@ export const deleteCampground = catchAsync(async (req, res) => {
     res.status(200).json({ message: 'The campground is successfully deleted' });
 })
 
+/**
+ * Fetch details for a single campground, including populated reviews, author, and booking counts
+ * @route GET /campgrounds/:id
+ */
 export const showOneCampground = catchAsync(async (req, res) => {
     const { id } = req.params
     /* faster query for dbS

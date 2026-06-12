@@ -1,12 +1,19 @@
+/**
+ * @file campground.js
+ * @description Mongoose model for Campgrounds.
+ * Includes middleware for cascading deletes of associated reviews and Cloudinary images.
+ */
 import mongoose from 'mongoose';
 import Review from './review.js';
 import { cloudinary } from '../config/cloudinary.js';
 import {campgrounds} from '../schemas/campgroundSchema.js';
 
- campgrounds.post('findOneAndDelete',async function(doc){
-    console.log('Delete a campground')
-    console.log(doc)
-    if(doc){
+/**
+ * Post-delete middleware
+ * Triggers when a campground is deleted to clean up orphaned reviews and images.
+ */
+campgrounds.post('findOneAndDelete', async function (doc) {
+    if (doc) {
          await Review.deleteMany({
             _id:{
                 $in:doc.reviews

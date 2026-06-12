@@ -1,3 +1,8 @@
+/**
+ * @file Home.jsx
+ * @description Main campgrounds listing page.
+ * Displays all campgrounds with filtering, pagination, and a dynamic MapTiler view.
+ */
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import '../css/Home.css'

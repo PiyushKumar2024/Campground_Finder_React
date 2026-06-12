@@ -1,3 +1,8 @@
+/**
+ * @file Register.jsx
+ * @description User registration component.
+ * Allows new users to create accounts with profile images and select their roles.
+ */
 import '../css/Register.css'
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'

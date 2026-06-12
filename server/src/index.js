@@ -1,3 +1,9 @@
+/**
+ * @file index.js
+ * @description Main entry point for the Explorion Express backend server.
+ * Handles database connection, middleware configuration, authentication strategy setup,
+ * routing, and global error handling.
+ */
 import express from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
@@ -28,53 +34,67 @@ if (!MONGOURL) {
     console.error("CRITICAL ERROR: MONGO_URL is missing. Make sure you have a .env file with this variable.");
 }
 
-// Debugging Middleware: Log every request to see if it reaches the server
-app.use((req, res, next) => {
-    console.log(`DEBUG: Incoming Request ${req.method} ${req.url}`);
-    next();
-});
-
+/**
+ * Connect to MongoDB database
+ */
 mongoose.connect(MONGOURL)
     .then(() => {
-        console.log('successfully connected with mongodb')
-        console.log('yay')
+        console.log('Successfully connected to MongoDB');
     })
     .catch(err => {
-        console.log('error in connection')
-        console.log(err)
-    })
+        console.error('MongoDB connection error:', err);
+    });
 
+/**
+ * Global Middleware Setup
+ */
 app.use(cors({
     origin: process.env.CLIENT_URL || 'http://localhost:5173',
     credentials: true
 }));
 
-// Stripe webhook needs raw body — must be mounted BEFORE express.json()
+// Stripe webhook needs raw body parsing — must be mounted BEFORE express.json()
 app.post('/webhook/stripe', express.raw({ type: 'application/json' }), handleStripeWebhook);
 
-app.use(express.urlencoded({ extended: true })) //for api works
-app.use(express.json()) //also for parsing reqbody and working with json data
-app.use(passport.initialize());//initi passport and also add its method to req body
-passport.use(new LocalStrategy(User.authenticate()));//local->auth using username and pass .auth is from pass-lol-mon plugin
-configureJwtStrategy(passport);//use the jwt stratergy in passport.js for autho
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(express.json()); // Parse JSON bodies
 
-//setting up routes
-app.use('/campgrounds', campgroundsRoutes)
-app.use('/campgrounds/:id/reviews', reviewsRoutes)
-app.use('/', authenticationRoutes)
-app.use('/', bookingRoutes)
-app.use('/api/trip', tripPlannerRoutes)
-app.use('/api/places', placesRoutes)
+/**
+ * Authentication Setup
+ */
+app.use(passport.initialize()); // Initialize Passport.js for authentication
+// Local Strategy for username/password login (provided by passport-local-mongoose)
+passport.use(new LocalStrategy(User.authenticate()));
+// JWT Strategy for stateless API authentication
+configureJwtStrategy(passport);
 
-//error handling middleware (have an extra err signature) also handles the catchasync
+/**
+ * API Routes Setup
+ */
+app.use('/campgrounds', campgroundsRoutes);
+app.use('/campgrounds/:id/reviews', reviewsRoutes);
+app.use('/', authenticationRoutes);
+app.use('/', bookingRoutes);
+app.use('/api/trip', tripPlannerRoutes);
+app.use('/api/places', placesRoutes);
+
+/**
+ * Global Error Handling Middleware
+ * Catches errors thrown in routes or passed via next(err)
+ */
 app.use((err, req, res, next) => {
-    //default message and status code
-    if (!err.message) err.message = 'Something went wrong'
-    if (!err.status) err.status = 500
-    console.log(err)
-    // Return a JSON response for errors
-    res.status(err.status).json({ message: err.message, stack: process.env.NODE_ENV === 'development' ? err.stack : undefined });
-})
+    // Default message and status code
+    if (!err.message) err.message = 'Something went wrong';
+    if (!err.status) err.status = 500;
+    
+    console.error('Global Error Handler:', err);
+    
+    // Return a JSON response containing error details (stack trace only in dev)
+    res.status(err.status).json({ 
+        message: err.message, 
+        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined 
+    });
+});
 
 app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`)

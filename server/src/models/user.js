@@ -1,3 +1,9 @@
+/**
+ * @file user.js
+ * @description Mongoose model for Users.
+ * Incorporates passport-local-mongoose to automatically handle password hashing
+ * and uniqueness validation for the username field.
+ */
 import mongoose from 'mongoose';
 import passportLocalMongoose from 'passport-local-mongoose';
 import {user} from '../schemas/userSchema.js';

@@ -1,3 +1,8 @@
+/**
+ * @file main.jsx
+ * @description React Application Entry Point.
+ * Sets up routing, global Redux store, and Axios defaults for the client side.
+ */
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './css/index.css';
@@ -24,8 +29,13 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store.js';
 import axios from 'axios';
 
+// Configure global Axios defaults
 axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
+/**
+ * React Router Configuration
+ * Maps URL paths to React components, wrapping protected routes in <RequireAuth>
+ */
 const router=createBrowserRouter([
   {
     path:'/',
@@ -46,7 +56,7 @@ const router=createBrowserRouter([
         element:<Home/>
       },
       {
-        //dont use / for nested routes
+        // Protected route: Create a new campground
         path:'new',
         element:<RequireAuth><NewCampForm/></RequireAuth>
       },

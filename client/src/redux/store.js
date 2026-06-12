@@ -1,3 +1,7 @@
+/**
+ * @file store.js
+ * @description Global Redux store configuration.
+ */
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./featuresRedux/userSlice";
 export const store=configureStore({
