@@ -17,7 +17,7 @@ const FavoriteButton = ({ campgroundId, isAbsolute = true }) => {
         e.stopPropagation();
 
         if (!isLoggedIn) {
-            navigate('/login');
+            navigate('/user/login');
             return;
         }
 

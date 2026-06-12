@@ -158,7 +158,7 @@ const BookingCalendar = ({ campgroundId, pricePerNight, currentUser }) => {
                 </button>
             ) : (
                 <div className="login-prompt">
-                    <Link to="/login">Log in</Link> to book this campground
+                    <Link to="/user/login">Log in</Link> to book this campground
                 </div>
             )}
         </div>
