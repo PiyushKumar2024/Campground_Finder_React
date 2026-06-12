@@ -121,6 +121,3 @@ export const isAccountOwner = catchAsync(async (req, res, next) => {
     }
     next();
 })
-
-    next();
-})
