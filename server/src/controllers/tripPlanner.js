@@ -105,14 +105,14 @@ Instructions:
         let response;
         try {
             response = await ai.models.generateContent({
-                model: "gemini-2.5-flash",
+                model: "gemini-2.0-flash",
                 contents: prompt,
                 config,
             });
         } catch (err) {
-            console.warn("Primary model gemini-2.5-flash failed, falling back to gemini-1.5-flash:", err.message);
+            console.warn("Primary model gemini-2.0-flash failed, falling back to gemini-1.5-pro:", err.message);
             response = await ai.models.generateContent({
-                model: "gemini-1.5-flash",
+                model: "gemini-1.5-pro",
                 contents: prompt,
                 config,
             });
