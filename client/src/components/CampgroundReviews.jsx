@@ -50,7 +50,7 @@ const CampgroundReviews = ({ camp, setCamp, currentUser, id, setError }) => {
                 <span className="badge bg-dark rounded-pill px-3 py-2">{camp.reviews.length} reviews</span>
             </div>
 
-            {currentUser && (
+            {currentUser?.username && (
                 <div className="card border-0 bg-light mb-4 rounded-4">
                     <div className="card-body p-4">
                         <h5 className="fw-bold mb-3">Leave a Review</h5>
@@ -97,7 +97,7 @@ const CampgroundReviews = ({ camp, setCamp, currentUser, id, setError }) => {
                                         </div>
                                     </div>
                                 </div>
-                                {currentUser && currentUser.username === review.author.username && (
+                                {currentUser?.username && currentUser.username === review.author.username && (
                                     <button className="btn btn-sm btn-link text-danger p-0 border-0" onClick={() => handleDeleteReview(review._id)}>
                                         <i className="bi bi-trash"></i>
                                     </button>
