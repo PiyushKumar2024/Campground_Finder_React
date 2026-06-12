@@ -93,10 +93,13 @@ Instructions:
 3. Search the web to provide realistic, current travel prices/costs for each option. Use the currency appropriate for the traveler's origin if possible, otherwise use local currency.
 4. Suggest 2-3 specific, real nearby attractions for each stop. You MUST provide real [longitude, latitude] coordinates for each attraction so we can map them.
 5. Provide a route suggestion (best roads, scenic drives) for each leg.
+6. CRITICAL: You MUST generate an object inside the "legs" array for EVERY connection between the stops. Do not skip any legs.
+7. CRITICAL: You MUST generate an object inside the "stopInsights" array for EVERY stop mentioned in the prompt.
 `;
 
     const config = {
-        tools: [{ googleSearch: {} }]
+        tools: [{ googleSearch: {} }],
+        maxOutputTokens: 8192
         // Note: responseMimeType: 'application/json' is not supported alongside googleSearch tool in Gemini currently.
         // We rely on the prompt instructing it to return strict JSON.
     };
